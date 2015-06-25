@@ -36,6 +36,7 @@ import com.beeminder.gtbee.services.ReminderService;
 
 import java.util.Calendar;
 import java.util.Date;
+import java.util.regex.Pattern;
 
 
 public class NewTask extends ActionBarActivity implements TimePickerDialog.OnTimeSetListener,
@@ -176,6 +177,11 @@ public class NewTask extends ActionBarActivity implements TimePickerDialog.OnTim
         EditText editText= (EditText) view.findViewById(R.id.new_task_title);
         title = editText.getText().toString().trim();
         Long addedDate = Calendar.getInstance().getTimeInMillis();
+
+        // Any Task starting with test will have no penalty
+        if (Pattern.matches("(t|T)est\\d?.*", title)){
+            penalty = 0;
+        }
 
         if (retryNumber > 0){
             new Utility().deleteTaskFromTitle(title, this);
