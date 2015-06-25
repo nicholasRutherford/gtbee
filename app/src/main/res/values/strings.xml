@@ -1,0 +1,24 @@
+<resources>
+    <string name="app_name">GTBee</string>
+    <string name="action_settings">Settings</string>
+
+    <string name="action_new_task_save">Save</string>
+    <string name="title_activity_new_task">New Task</string>
+    <string name="new_task_title_hint">Enter name of task</string>
+    <string name="pick_date">Pick date</string>
+    <string name="pick_time">Pick time</string>
+    <string name="new_task_due">Due: </string>
+    <string name="title_activity_task_detail">TaskDetail</string>
+    <string name="hello_world">Hello world!</string>
+
+    <string name="delete_task">I\'m done!</string>
+
+    <string name="over_due_explanation">You missed the deadline, and your account has been charged.</string>
+    <string name="over_due_delete">This task can no longer be done, and I\'d like to delete it.</string>
+    <string name="over_due_renew">This task still needs to be done, and I\'d like to set a new due date and up my penalty.</string>
+    <string name="title_activity_beeminder_auth_info">BeeminderAuthInfo</string>
+
+    <string name="beeminder_auth_info">In order to use this app you must have a beeminder account.</string>
+    <string name="beeminder_auth_sign_in">Sign in.</string>
+    <string name="settings_notifications">Notifications</string>
+</resources>

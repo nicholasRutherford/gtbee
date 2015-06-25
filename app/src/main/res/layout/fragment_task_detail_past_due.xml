@@ -1,0 +1,42 @@
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+
+    tools:context="com.beeminder.gtbee.TaskDetailPastDueFragment">
+<LinearLayout
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:gravity="center_horizontal"
+        android:textAppearance="?android:textAppearanceLarge"
+        android:padding="20dp"
+        android:text="@string/over_due_explanation"/>
+
+    <Button
+        android:layout_margin="20dp"
+        android:padding="20dp"
+
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/over_due_renew"
+        android:textAppearance="?android:textAppearanceMedium"
+        android:onClick="renewTask" />
+
+    <Button
+        android:layout_margin="20dp"
+        android:background="@color/Primary_dark"
+        android:padding="20dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/over_due_delete"
+        android:textAppearance="?android:textAppearanceMedium"
+        android:onClick="deleteTask" />
+
+</LinearLayout>
+</ScrollView>

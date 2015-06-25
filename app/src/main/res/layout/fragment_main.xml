@@ -1,0 +1,28 @@
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:fab="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="com.beeminder.gtbee.TaskFragment">
+
+
+        <ListView
+            android:id="@+id/Task_list"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"/>
+
+
+    <com.getbase.floatingactionbutton.AddFloatingActionButton
+        android:id="@+id/pink_icon"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        fab:fab_plusIconColor="@color/Accent_main"
+        fab:fab_colorNormal="@color/Primary_main"
+        fab:fab_colorPressed="@color/Primary_light"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentRight="true"
+        android:layout_marginBottom="16dp"
+        android:onClick="add_task"/>
+
+</RelativeLayout>

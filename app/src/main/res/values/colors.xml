@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <color name="Primary_main">#FFC107</color>
+    <color name="Primary_dark">#FFA000</color>
+    <color name="Primary_light">#FFECB3</color>
+    <color name="fab_color">#FF6F00</color>
+
+    <color name="Accent_main">#212121</color>
+    <color name="Accent_fallback">#9E9E9E</color>
+
+
+</resources>
