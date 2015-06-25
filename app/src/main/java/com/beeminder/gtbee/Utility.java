@@ -106,7 +106,7 @@ public class Utility {
 
         String hour = Integer.toString(rawHour);
         String min = String.format("%02d", cal.get(Calendar.MINUTE));
-        String ampm = cal.getDisplayName(Calendar.AM_PM, Calendar.LONG, Locale.getDefault());
+        String ampm = cal.getDisplayName(Calendar.AM_PM, Calendar.LONG, Locale.getDefault()).toUpperCase();
 
         return hour + ":" + min + " " + ampm;
     }
@@ -161,7 +161,7 @@ public class Utility {
         if (((time_mili - current)  < day_mili )
                 && (cur.get(Calendar.DAY_OF_WEEK) == given.get(Calendar.DAY_OF_WEEK))){
 
-            return cur.getDisplayName(Calendar.AM_PM, Calendar.LONG, Locale.getDefault());
+            return cur.getDisplayName(Calendar.AM_PM, Calendar.LONG, Locale.getDefault()).toUpperCase();
         } else {
             return niceTime(time_mili);
         }

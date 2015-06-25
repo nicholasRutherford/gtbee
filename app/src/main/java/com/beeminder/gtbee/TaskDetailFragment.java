@@ -51,6 +51,10 @@ public class TaskDetailFragment extends Fragment {
         TextView dateAddedView = (TextView) view.findViewById(R.id.detail_task_date_added);
         dateAddedView.setText(new Utility().niceDateTime(dateAdded));
 
+
+        TextView dateDueView = (TextView) view.findViewById(R.id.detail_task_date_due);
+        dateDueView.setText(new Utility().niceDateTime(dateDue));
+
         TextView penaltyView = (TextView) view.findViewById(R.id.detail_task_penalty);
         penaltyView.setText(new Utility().formatPenalty(penalty));
 
