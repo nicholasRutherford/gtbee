@@ -49,8 +49,8 @@ public class MainActivity extends ActionBarActivity {
 
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_settings) {
-            Intent intent = new Intent(this, SettingsActivity.class);
-            startActivity(intent);
+            getFragmentManager().beginTransaction().replace(android.R.id.content,
+                    new PrefsFragment()).commit();
         }
 //        if (id == R.id.action_add_freebie){
 //            SharedPreferences settings = getSharedPreferences(OauthActivity.PREF_NAME, MODE_PRIVATE);

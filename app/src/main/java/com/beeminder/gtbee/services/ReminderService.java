@@ -4,9 +4,11 @@ import android.app.IntentService;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.media.RingtoneManager;
 import android.net.Uri;
+import android.preference.PreferenceManager;
 import android.support.v4.app.NotificationCompat;
 import android.util.Log;
 
@@ -43,40 +45,42 @@ public class ReminderService extends IntentService {
         Log.v("ReminderService", title);
         Log.v("ReminderService", "ID: " + Integer.toString(notification_id));
 
+        SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(this);
+        Boolean notify = sharedPref.getBoolean("notifications_checkbox", true);
+
+        if (notify) {
+
+            NotificationCompat.Builder mBuilder = new NotificationCompat.Builder(this)
+                    .setSmallIcon(R.drawable.notification_icon)
+                    .setContentTitle(title)
+                    .setContentText(text)
+                    .setAutoCancel(true)
+                    .setLights(Color.YELLOW, 500, 500)
+                    .setVibrate(vibPattern)
+                    .setSound(sound)
+                    .setTicker(title);
+
+            // Click notification action
+            Intent resultIntent = new Intent(this, TaskDetail.class);
+            resultIntent.putExtra(TaskFragment.EXTRA_MESSAGE, task_title);
+
+            PendingIntent resultPendingIntent = PendingIntent.getActivity(
+                    this, 0, resultIntent, PendingIntent.FLAG_UPDATE_CURRENT);
+
+            mBuilder.setContentIntent(resultPendingIntent);
+
+            //Add done button
+            Intent doneIntent = new Intent(this, DeleteTaskService.class);
+            doneIntent.putExtra(DeleteTaskService.TASK_TITLE, task_title);
+            PendingIntent pDoneIntent = PendingIntent.getService(this, notification_id * 10 + 2,
+                    doneIntent, PendingIntent.FLAG_CANCEL_CURRENT);
+            Log.v("ReminderService", "DeleteTask set for: " + task_title);
+
+            mBuilder.addAction(R.drawable.ic_done_black_24dp, "Done!", pDoneIntent);
 
 
-        NotificationCompat.Builder mBuilder = new NotificationCompat.Builder(this)
-                .setSmallIcon(R.drawable.notification_icon)
-                .setContentTitle(title)
-                .setContentText(text)
-                .setAutoCancel(true)
-                .setLights(Color.YELLOW, 500, 500)
-                .setVibrate(vibPattern)
-                .setSound(sound)
-                .setTicker(title);
-
-        // Click notification action
-        Intent resultIntent = new Intent(this, TaskDetail.class);
-        resultIntent.putExtra(TaskFragment.EXTRA_MESSAGE, task_title);
-
-        PendingIntent resultPendingIntent = PendingIntent.getActivity(
-                this, 0, resultIntent, PendingIntent.FLAG_UPDATE_CURRENT);
-
-        mBuilder.setContentIntent(resultPendingIntent);
-
-        //Add done button
-        Intent doneIntent = new Intent(this, DeleteTaskService.class);
-        doneIntent.putExtra(DeleteTaskService.TASK_TITLE, task_title);
-        PendingIntent pDoneIntent = PendingIntent.getService(this, notification_id*10+2,
-                doneIntent, PendingIntent.FLAG_CANCEL_CURRENT);
-        Log.v("ReminderService", "DeleteTask set for: " + task_title);
-
-        mBuilder.addAction(R.drawable.ic_done_black_24dp, "Done!", pDoneIntent);
-
-
-
-
-        NotificationManager mNotifyMgr = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
-        mNotifyMgr.notify(notification_id, mBuilder.build());
+            NotificationManager mNotifyMgr = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
+            mNotifyMgr.notify(notification_id, mBuilder.build());
+        }
     }
 }

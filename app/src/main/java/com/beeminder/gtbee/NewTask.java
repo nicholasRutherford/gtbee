@@ -221,38 +221,35 @@ public class NewTask extends ActionBarActivity implements TimePickerDialog.OnTim
 
         AlarmManager alarmManager = (AlarmManager) getSystemService(ALARM_SERVICE);
 
-        SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(this);
-        Boolean notify = sharedPref.getBoolean("notifications_checkbox", true);
 
-        if (notify) {
-            // One hour notification
-            Intent intentHour = new Intent(this, ReminderService.class);
-            intentHour.putExtra(ReminderService.REMINDER_TITLE, title + "!");
-            intentHour.putExtra(ReminderService.REMINDER_TEXT, "Due in less than one hour! Eek!");
-            intentHour.putExtra(ReminderService.REMINDER_ID, hour_id);
-            intentHour.putExtra(ReminderService.TASK_TITLE, title);
+        // One hour notification
+        Intent intentHour = new Intent(this, ReminderService.class);
+        intentHour.putExtra(ReminderService.REMINDER_TITLE, title + "!");
+        intentHour.putExtra(ReminderService.REMINDER_TEXT, "Due in less than one hour! Eek!");
+        intentHour.putExtra(ReminderService.REMINDER_ID, hour_id);
+        intentHour.putExtra(ReminderService.TASK_TITLE, title);
 
-            PendingIntent pendingIntentHour = PendingIntent.getService(this, hour_id, intentHour, PendingIntent.FLAG_UPDATE_CURRENT);
+        PendingIntent pendingIntentHour = PendingIntent.getService(this, hour_id, intentHour, PendingIntent.FLAG_UPDATE_CURRENT);
 
-            Log.v("newTask", "Due Date: " + new Utility().niceDateTime(mdate));
+        Log.v("newTask", "Due Date: " + new Utility().niceDateTime(mdate));
 
-            alarmManager.set(AlarmManager.RTC_WAKEUP, mdate - hourMili, pendingIntentHour);
-            Log.v("newTask", "Alarm set for: " + new Utility().niceDateTime(mdate - hourMili));
+        alarmManager.set(AlarmManager.RTC_WAKEUP, mdate - hourMili, pendingIntentHour);
+        Log.v("newTask", "Alarm set for: " + new Utility().niceDateTime(mdate - hourMili));
 
 
-            // One day notification
-            Intent intentDay = new Intent(this, ReminderService.class);
-            intentDay.putExtra(ReminderService.REMINDER_TITLE, title + "!");
-            intentDay.putExtra(ReminderService.REMINDER_TEXT, "Due in less than one day.");
-            intentDay.putExtra(ReminderService.REMINDER_ID, day_id);
-            intentDay.putExtra(ReminderService.TASK_TITLE, title);
+        // One day notification
+        Intent intentDay = new Intent(this, ReminderService.class);
+        intentDay.putExtra(ReminderService.REMINDER_TITLE, title + "!");
+        intentDay.putExtra(ReminderService.REMINDER_TEXT, "Due in less than one day.");
+        intentDay.putExtra(ReminderService.REMINDER_ID, day_id);
+        intentDay.putExtra(ReminderService.TASK_TITLE, title);
 
-            PendingIntent pendingIntentDay = PendingIntent.getService(this, day_id, intentDay, PendingIntent.FLAG_UPDATE_CURRENT);
+        PendingIntent pendingIntentDay = PendingIntent.getService(this, day_id, intentDay, PendingIntent.FLAG_UPDATE_CURRENT);
 
 
-            alarmManager.set(AlarmManager.RTC_WAKEUP, mdate - dayMili, pendingIntentDay);
-            Log.v("newTask", "Alarm set for: " + new Utility().niceDateTime(mdate - dayMili));
-        }
+        alarmManager.set(AlarmManager.RTC_WAKEUP, mdate - dayMili, pendingIntentDay);
+        Log.v("newTask", "Alarm set for: " + new Utility().niceDateTime(mdate - dayMili));
+
         // Set payment alarm
         if (penalty > 0 ) {
             Intent intentPayment = new Intent(this, PaymentService.class);

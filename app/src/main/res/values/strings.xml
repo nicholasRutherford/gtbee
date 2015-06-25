@@ -21,4 +21,5 @@
     <string name="beeminder_auth_info">In order to use this app you must have a beeminder account.</string>
     <string name="beeminder_auth_sign_in">Sign in.</string>
     <string name="settings_notifications">Notifications</string>
+
 </resources>
