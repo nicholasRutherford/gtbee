@@ -4,29 +4,26 @@
     <style name="AppTheme" parent="Theme.AppCompat.Light">
         <item name="colorPrimary">@color/Primary_main</item>
         <item name="colorPrimaryDark">@color/Primary_dark</item>
+        <item name="colorAccent">@color/Primary_main</item>
     </style>
 
+    <!-- Main activity theme. -->
     <style name="TaskTheme" parent="AppTheme">
-        <item name="android:actionBarStyle">@style/GTBeeActionBar</item>
-        <item name="android:actionMenuTextColor">@color/Accent_main</item>
+        <item name="actionBarStyle">@style/ActionBar.Solid.Beeminedr.NoTitle</item>
     </style>
 
-    <style name="GTBeeActionBar"
-        parent="@android:style/Widget.Holo.Light.ActionBar.Solid.Inverse">
-        <item name="android:background">@color/Primary_dark</item>
-        <item name="android:titleTextStyle">@style/GTBeeActionBarTitleText</item>
+    <!-- Main activity action bar styles -->
+    <style name="ActionBar.Solid.Beeminedr.NoTitle" parent="@style/Widget.AppCompat.Light.ActionBar.Solid.Inverse">
+        <item name="displayOptions">useLogo|showHome</item>
+        <item name="logo">@drawable/ic_action_gtbee_logo</item>
     </style>
-
-    <style name="GTBeeActionBarTitleText"
-        parent="Theme.AppCompat.Light.DarkActionBar">
-        <item name="android:textColor">@color/Accent_main</item>
-    </style>
-
 
     <style name="Theme.App.Base" parent="Theme.AppCompat.Light">
         <item name="colorControlNormal">@color/Primary_main</item>
         <item name="colorControlActivated">@color/Primary_light</item>
         <item name="colorControlHighlight">@color/Primary_light</item>
     </style>
+
+
 
 </resources>
