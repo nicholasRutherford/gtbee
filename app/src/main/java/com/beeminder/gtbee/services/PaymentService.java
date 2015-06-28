@@ -80,12 +80,14 @@ public class PaymentService extends IntentService {
             url = "https://www.beeminder.com/"
                     + "api/v1/charges.json?amount=" + Integer.toString(payment)
                     + "&note="+ URLEncoder.encode(title, "UTF-8")
+                    + "+via+GTBeedroid"
 //                    + "&dryrun=true"
                     + "&access_token=" + accessToken;
         } catch (UnsupportedEncodingException e) {
             url = "https://www.beeminder.com/"
                     + "api/v1/charges.json?amount=" + Integer.toString(payment)
                     + "&note=" + "unencodeable+task+name"
+                    + "+via+GTBeedroid"
 //                    + "&dryrun=true"
                     + "&access_token=" + accessToken;
         }
