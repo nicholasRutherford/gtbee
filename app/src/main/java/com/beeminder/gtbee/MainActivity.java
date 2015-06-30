@@ -116,6 +116,7 @@ public class MainActivity extends ActionBarActivity {
     }
 
     public void startBeemindIntegration(View view){
+        mDrawerLayout.closeDrawers();
         Intent intent = new Intent(this, BeeminederIntActivity.class);
         startActivity(intent);
 

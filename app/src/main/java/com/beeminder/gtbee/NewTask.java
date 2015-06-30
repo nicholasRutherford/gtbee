@@ -31,6 +31,8 @@ import android.widget.ToggleButton;
 import com.beeminder.gtbee.auth.OauthActivity;
 import com.beeminder.gtbee.data.TaskContract;
 import com.beeminder.gtbee.data.TaskDbHelper;
+import com.beeminder.gtbee.integrations.BeeminederIntActivity;
+import com.beeminder.gtbee.services.BeeminederIntSendDataService;
 import com.beeminder.gtbee.services.PaymentService;
 import com.beeminder.gtbee.services.ReminderService;
 
@@ -147,7 +149,6 @@ public class NewTask extends ActionBarActivity implements TimePickerDialog.OnTim
     }
 
     public void saveTask(){
-        //todo send in beemineder data point if set up
         Long dueDate = mdate;
         String title;
 
@@ -211,6 +212,7 @@ public class NewTask extends ActionBarActivity implements TimePickerDialog.OnTim
         int hour_id;
         int day_id;
         int pay_id;
+        int send_id;
 
         int hourMili = 60*60*1000;
         int dayMili = 24*hourMili;
@@ -225,6 +227,7 @@ public class NewTask extends ActionBarActivity implements TimePickerDialog.OnTim
         hour_id = base_id * 100 + 60; // 60 min in an hour
         day_id = base_id * 100 + 24; // 24 hours in a day
         pay_id = base_id * 100 + 55; // 55 = $$
+        send_id = base_id *100 + 88; // 88 = BB aka Beemineder
 
         AlarmManager alarmManager = (AlarmManager) getSystemService(ALARM_SERVICE);
 
@@ -269,6 +272,19 @@ public class NewTask extends ActionBarActivity implements TimePickerDialog.OnTim
 
             alarmManager.set(AlarmManager.RTC_WAKEUP, mdate, pendingIntentPayment);
             Log.v("newTask", "Payment set for: " + new Utility().niceDateTime(mdate));
+        }
+
+        SharedPreferences settings = getSharedPreferences(OauthActivity.PREF_NAME, MODE_PRIVATE);
+        String beeminderGoal = settings.getString(BeeminederIntActivity.BEEMINDER_GOAL, null);
+
+        if (!(beeminderGoal == null)){
+            Intent intentSendData = new Intent(this, BeeminederIntSendDataService.class);
+            intentSendData.putExtra(BeeminederIntSendDataService.TASK_TITLE, title);
+            intentSendData.putExtra(BeeminederIntSendDataService.TASK_ID, base_id);
+            intentSendData.putExtra(BeeminederIntSendDataService.ATTEMPT_NUMBER, 0);
+
+            startService(intentSendData);
+            Log.v("NewTask", "Send datapoint to beeminder!");
         }
 
     }

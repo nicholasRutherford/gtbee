@@ -16,6 +16,7 @@
         android:textAppearance="?android:textAppearanceMedium"/>
 
     <LinearLayout
+        android:id="@+id/beemind_int_spinner_layout"
         android:layout_marginTop="24dp"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -35,7 +36,28 @@
 
     </LinearLayout>
 
+    <LinearLayout
+        android:id="@+id/beemind_int_current_goal_layout"
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:textAppearance="?android:textAppearanceMedium"
+            android:layout_height="wrap_content"
+            android:text="Current Goal: "/>
+
+        <TextView
+            android:id="@+id/beemind_int_current_goal"
+            android:textAppearance="?android:textAppearanceLarge"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+    </LinearLayout>
+
     <Button
+        android:padding="16dp"
+        android:layout_marginTop="32dp"
         android:id="@+id/beemind_int_button"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"

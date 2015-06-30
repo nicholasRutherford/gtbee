@@ -1,5 +1,6 @@
 package com.beeminder.gtbee.integrations;
 
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
@@ -11,6 +12,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.Spinner;
+import android.widget.TextView;
 
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
@@ -19,11 +21,13 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 import com.beeminder.gtbee.R;
+import com.beeminder.gtbee.auth.BeeminderAuthInfo;
 import com.beeminder.gtbee.auth.OauthActivity;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.w3c.dom.Text;
 
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
@@ -31,19 +35,51 @@ import java.util.ArrayList;
 
 public class BeeminederIntActivity extends ActionBarActivity {
     public String[] mGoals;
+    public static final String BEEMINDER_GOAL = "com.beeminder.gtbee.beeminder_goal";
+    public boolean goalSet = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        SharedPreferences settings = getSharedPreferences(OauthActivity.PREF_NAME, MODE_PRIVATE);
+        String beeminderGoal = settings.getString(BEEMINDER_GOAL, null);
+        Log.v("BeeminderIngegration", "Checking goal: " + beeminderGoal);
+        goalSet = !(beeminderGoal == null);
+
         setContentView(R.layout.activity_beemineder_int);
         getSupportActionBar().setTitle(getResources().getString(R.string.beeminder_int_title));
-        setupSpinner();
+        if (goalSet){
+            Spinner spinner = (Spinner) findViewById(R.id.beemind_int_spinner);
+            spinner.setVisibility(View.INVISIBLE);
+        } else {
+            setupSpinner();
+        }
 
-        //todo set text on button
     }
 
     public void buttonClick(View view){
-        //todo save choice
+        if (goalSet) {
+            SharedPreferences settings = getSharedPreferences(OauthActivity.PREF_NAME, MODE_PRIVATE);
+            SharedPreferences.Editor editor = settings.edit();
+            editor.putString(BEEMINDER_GOAL, null);
+            editor.commit();
+            goalSet = false;
+            finish();
+
+        }else {
+            Spinner spinner = (Spinner) findViewById(R.id.beemind_int_spinner);
+            TextView textView = (TextView) spinner.getSelectedView().findViewById(R.id.spinner_item_text);
+            String goal = textView.getText().toString();
+
+
+            Log.v("BeemindIntActivity", "Goal: " + goal);
+            SharedPreferences settings = getSharedPreferences(OauthActivity.PREF_NAME, MODE_PRIVATE);
+            SharedPreferences.Editor editor = settings.edit();
+            editor.putString(BEEMINDER_GOAL, goal);
+            editor.commit();
+            goalSet = true;
+            finish();
+        }
 
     }
 

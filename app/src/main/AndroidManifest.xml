@@ -93,6 +93,12 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.beeminder.gtbee.MainActivity" />
         </activity>
+
+        <service
+            android:name=".services.BeeminederIntSendDataService"
+            android:enabled="true"
+            android:exported="false" >
+        </service>
     </application>
 
 </manifest>
