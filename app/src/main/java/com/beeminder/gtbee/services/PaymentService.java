@@ -112,7 +112,7 @@ public class PaymentService extends IntentService {
                                 editor.putString(OauthActivity.PREF_ACCESS_TOKEN, null);
                                 editor.commit();
                             }
-                            requeueIntent(); //TODO
+                            requeueIntent();
                     }
                 });
 

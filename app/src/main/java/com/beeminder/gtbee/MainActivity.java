@@ -19,6 +19,7 @@ import android.widget.ListView;
 
 import com.beeminder.gtbee.auth.BeeminderAuthInfo;
 import com.beeminder.gtbee.auth.OauthActivity;
+import com.beeminder.gtbee.integrations.BeeminederIntActivity;
 
 
 public class MainActivity extends ActionBarActivity {
@@ -110,27 +111,13 @@ public class MainActivity extends ActionBarActivity {
     }
 
     public void startSettings(View view){
-//        DrawerLayout drawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
-//        drawerLayout.closeDrawers();
-//        getFragmentManager().beginTransaction()
-//                .replace(R.id.drawer_layout, new PrefsFragment())
-//                .addToBackStack("main")
-//                .commit();
         Intent intent = new Intent(this, PrefsActivity.class);
         startActivity(intent);
     }
 
-    @Override
-    public void onBackPressed() {
-        FragmentManager fm = getFragmentManager();
-        if(fm.getBackStackEntryCount() != 0){
-            fm.popBackStack();
-        } else{
-            super.onBackPressed();
-        }
-    }
-
     public void startBeemindIntegration(View view){
+        Intent intent = new Intent(this, BeeminederIntActivity.class);
+        startActivity(intent);
 
     }
 }

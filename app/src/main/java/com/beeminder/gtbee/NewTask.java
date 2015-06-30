@@ -147,6 +147,7 @@ public class NewTask extends ActionBarActivity implements TimePickerDialog.OnTim
     }
 
     public void saveTask(){
+        //todo send in beemineder data point if set up
         Long dueDate = mdate;
         String title;
 

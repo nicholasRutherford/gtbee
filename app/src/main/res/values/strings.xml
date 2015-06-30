@@ -25,5 +25,10 @@
     <string name="drawer_open">Open preference drawer</string>
     <string name="drawer_close">Close preference drawer</string>
     <string name="title_activity_prefs">PrefsActivity</string>
+    <string name="title_activity_beemineder_int">BeeminederIntActivity</string>
+
+    <string name="beeminder_int_title">Beemind Adding Tasks</string>
+    <string name="beeminder_int_explanation">Select a current Beeminder goal, and then whenever you add a task to GTBee we\'ll automatically add a data point to that goal.</string>
+    <string name="beeminder_goal">Goal: </string>
 
 </resources>

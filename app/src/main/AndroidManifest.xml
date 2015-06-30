@@ -85,6 +85,14 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.beeminder.gtbee.MainActivity" />
         </activity>
+        <activity
+            android:name=".integrations.BeeminederIntActivity"
+            android:label="@string/title_activity_beemineder_int"
+            android:parentActivityName=".MainActivity" >
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.beeminder.gtbee.MainActivity" />
+        </activity>
     </application>
 
 </manifest>
