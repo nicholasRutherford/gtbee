@@ -2,6 +2,9 @@ package com.beeminder.gtbee;
 
 import android.os.Bundle;
 import android.preference.PreferenceFragment;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
 
 import com.beeminder.gtbee.R;
 
@@ -13,5 +16,7 @@ public class PrefsFragment extends PreferenceFragment {
 
         // Load the preferences from an XML resource
         addPreferencesFromResource(R.xml.preferences);
+
     }
+
 }

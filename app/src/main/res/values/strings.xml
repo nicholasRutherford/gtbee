@@ -22,4 +22,8 @@
     <string name="beeminder_auth_sign_in">Sign in.</string>
     <string name="settings_notifications">Notifications</string>
 
+    <string name="drawer_open">Open preference drawer</string>
+    <string name="drawer_close">Close preference drawer</string>
+    <string name="title_activity_prefs">PrefsActivity</string>
+
 </resources>

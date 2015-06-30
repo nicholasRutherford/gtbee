@@ -1,19 +1,31 @@
 package com.beeminder.gtbee;
 
+import android.app.FragmentManager;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.res.Configuration;
+import android.graphics.Color;
+import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
+import android.support.v7.app.ActionBarDrawerToggle;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewGroup;
+import android.widget.ArrayAdapter;
+import android.widget.ListView;
 
 import com.beeminder.gtbee.auth.BeeminderAuthInfo;
 import com.beeminder.gtbee.auth.OauthActivity;
 
 
 public class MainActivity extends ActionBarActivity {
+    private DrawerLayout mDrawerLayout;
+    private ActionBarDrawerToggle mDrawerToggle;
+    private CharSequence mDrawerTitle;
+    private CharSequence mTitle;
 
 
     @Override
@@ -31,6 +43,28 @@ public class MainActivity extends ActionBarActivity {
             startActivity(intent);
 
         }
+
+        mTitle = mDrawerTitle = getTitle();
+        mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
+        mDrawerToggle = new ActionBarDrawerToggle(this, mDrawerLayout, R.string.drawer_open, R.string.drawer_close);
+
+        mDrawerLayout.setDrawerListener(mDrawerToggle);
+
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setHomeButtonEnabled(true);
+
+    }
+
+    @Override
+    protected void onPostCreate(Bundle savedInstanceState) {
+        super.onPostCreate(savedInstanceState);
+        mDrawerToggle.syncState();
+    }
+
+    @Override
+    public void onConfigurationChanged(Configuration newConfig) {
+        super.onConfigurationChanged(newConfig);
+        mDrawerToggle.onConfigurationChanged(newConfig);
     }
 
     @Override
@@ -46,6 +80,10 @@ public class MainActivity extends ActionBarActivity {
         // automatically handle clicks on the Home/Up button, so long
         // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
+
+        if(mDrawerToggle.onOptionsItemSelected(item)){
+            return true;
+        }
 
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_settings) {
@@ -69,5 +107,30 @@ public class MainActivity extends ActionBarActivity {
         intent.putExtra(NewTask.TASK_NAME, "");
         intent.putExtra(NewTask.RETRY_NUMBER, 0);
         startActivity(intent);
+    }
+
+    public void startSettings(View view){
+//        DrawerLayout drawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
+//        drawerLayout.closeDrawers();
+//        getFragmentManager().beginTransaction()
+//                .replace(R.id.drawer_layout, new PrefsFragment())
+//                .addToBackStack("main")
+//                .commit();
+        Intent intent = new Intent(this, PrefsActivity.class);
+        startActivity(intent);
+    }
+
+    @Override
+    public void onBackPressed() {
+        FragmentManager fm = getFragmentManager();
+        if(fm.getBackStackEntryCount() != 0){
+            fm.popBackStack();
+        } else{
+            super.onBackPressed();
+        }
+    }
+
+    public void startBeemindIntegration(View view){
+
     }
 }

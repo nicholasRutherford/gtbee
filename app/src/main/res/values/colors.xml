@@ -8,6 +8,7 @@
 
     <color name="Accent_main">#212121</color>
     <color name="Accent_fallback">#9E9E9E</color>
+    <color name="White">#ffffff</color>
 
 
 </resources>

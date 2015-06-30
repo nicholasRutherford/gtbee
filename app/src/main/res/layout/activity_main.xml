@@ -1,7 +1,66 @@
-<fragment xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.v4.widget.DrawerLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/fragment_main_view"
-    android:name="com.beeminder.gtbee.TaskFragment"
-    tools:layout="@layout/fragment_main"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"/>
+    android:layout_height="match_parent"
+    android:id="@+id/drawer_layout">
+
+    <!-- Main page -->
+    <fragment
+        android:id="@+id/fragment_main_view"
+        android:name="com.beeminder.gtbee.TaskFragment"
+        tools:layout="@layout/fragment_main"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"/>
+
+    <!-- The navigation drawer -->
+    <LinearLayout
+        android:layout_width="240dp"
+        android:layout_height="match_parent"
+        android:layout_gravity="start"
+        android:paddingLeft="16dp"
+        android:background="@color/White"
+        android:orientation="vertical">
+
+        <LinearLayout
+            android:layout_marginTop="20dp"
+            android:layout_width="wrap_content"
+            android:layout_height="48dp"
+            android:orientation="horizontal"
+            android:onClick="startBeemindIntegration">
+
+            <ImageView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:src="@drawable/ic_beeminder_grey"/>
+
+            <TextView
+                android:paddingLeft="28dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Beeminder Integration"/>
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="48dp"
+            android:orientation="horizontal"
+            android:onClick="startSettings">
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/ic_settings_black_24dp"/>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:paddingLeft="32dp"
+                android:text="Settings"/>
+
+        </LinearLayout>
+
+
+    </LinearLayout>
+</android.support.v4.widget.DrawerLayout>
