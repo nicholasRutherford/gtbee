@@ -163,7 +163,9 @@ public class NewTask extends ActionBarActivity implements TimePickerDialog.OnTim
             return;
         }
 
-        mPenalty= new Utility().retryToAmount(retryNumber);
+        SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(this);
+        int customPenaltyAdjuster= Integer.parseInt(sharedPref.getString("starting_amount_list_pref", "0"));
+        mPenalty= new Utility().retryToAmount(retryNumber + customPenaltyAdjuster);
 
         // Check if the freebie button is on
         ToggleButton toggleButton = (ToggleButton) findViewById(R.id.new_task_freebie_toggle);
@@ -197,7 +199,7 @@ public class NewTask extends ActionBarActivity implements TimePickerDialog.OnTim
             builder.setNegativeButton(R.string.save_task_dialog_cancel, new DialogInterface.OnClickListener() {
                 @Override
                 public void onClick(DialogInterface dialog, int which) {
-                    //?
+                    // Do nothing
                 }
             });
 

@@ -29,7 +29,7 @@ public class Utility {
     private static final long min_mili = 60*sec_mili;
     private static final long hour_mili = 60*min_mili;
     private static final long day_mili = 24*hour_mili;
-    private static final int buffer_time = 1000*60;
+    private static final int buffer_time = 1000*30;
 
     public String formatPenalty(int penalty){
         return "$" + Integer.toString(penalty);
@@ -189,18 +189,18 @@ public class Utility {
     }
 
     public String dialogTime(Long dueDate){
-        Long currentDate = Calendar.getInstance().getTimeInMillis();
+        Long currentDate = Calendar.getInstance().getTimeInMillis() - buffer_time;
         Long diff = dueDate - currentDate;
         if (diff < sec_mili){
             return Long.toString(diff) + " miliseconds.";
         } else if (diff <min_mili){
-            return Integer.toString((int) Math.floor(diff/sec_mili)) + " seconds.";
+            return Integer.toString((int) Math.floor(diff / sec_mili)) + " seconds.";
         } else if (diff < hour_mili){
-            return Integer.toString((int) Math.floor(diff/min_mili)) + " minutes.";
+            return Integer.toString((int) Math.floor(diff / min_mili)) + " minutes.";
         } else if (diff < day_mili){
-            return Integer.toString((int) Math.floor(diff/hour_mili)) + " hours.";
+            return Integer.toString((int) Math.floor(diff / hour_mili)) + " hours.";
         } else {
-            return Integer.toString((int) Math.floor(diff/day_mili)) + " days.";
+            return Integer.toString((int) Math.floor(diff / day_mili)) + " days.";
         }
 
     }

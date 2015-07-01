@@ -7,4 +7,11 @@
         android:title="@string/settings_notifications"
         android:defaultValue="true" />
 
+    <ListPreference
+        android:key="starting_amount_list_pref"
+        android:title="Starting penalty for new tasks"
+        android:entries="@array/starting_amount_array_entries"
+        android:entryValues="@array/starting_amount_array_values"
+        android:defaultValue="0" />
+
 </PreferenceScreen>
