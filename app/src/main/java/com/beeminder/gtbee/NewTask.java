@@ -1,6 +1,7 @@
 package com.beeminder.gtbee;
 
 import android.app.AlarmManager;
+import android.app.AlertDialog;
 import android.app.DatePickerDialog;
 import android.app.DialogFragment;
 import android.app.Notification;
@@ -9,6 +10,7 @@ import android.app.PendingIntent;
 import android.app.TimePickerDialog;
 import android.content.ContentValues;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.database.Cursor;
@@ -47,6 +49,7 @@ public class NewTask extends ActionBarActivity implements TimePickerDialog.OnTim
     public long mdate;
     public String oldTaskName;
     public int retryNumber;
+    public int mPenalty = 0;
 
     public static final String TASK_NAME = "com.beeminder.gtbee.task_name";
     public static final String RETRY_NUMBER = "com.beeminder.gtbee.retry_number";
@@ -90,7 +93,7 @@ public class NewTask extends ActionBarActivity implements TimePickerDialog.OnTim
 
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_new_task_save) {
-            saveTask();
+            checkTask();
         }
 
         return super.onOptionsItemSelected(item);
@@ -148,7 +151,7 @@ public class NewTask extends ActionBarActivity implements TimePickerDialog.OnTim
         textView.setText(new Utility().niceDateTime(mdate));
     }
 
-    public void saveTask(){
+    public void checkTask(){
         Long dueDate = mdate;
         String title;
 
@@ -159,14 +162,67 @@ public class NewTask extends ActionBarActivity implements TimePickerDialog.OnTim
             t.show();
             return;
         }
-        int penalty = new Utility().retryToAmount(retryNumber);
+
+        mPenalty= new Utility().retryToAmount(retryNumber);
 
         // Check if the freebie button is on
         ToggleButton toggleButton = (ToggleButton) findViewById(R.id.new_task_freebie_toggle);
         if (toggleButton.isChecked()){
-            penalty = 0;
+            mPenalty = 0;
+        }
 
-            // Reduce their number of freebies available
+        NewTaskFragment frag = (NewTaskFragment) getSupportFragmentManager().findFragmentById(R.id.new_task_fragment);
+        View view = frag.getView();
+        EditText editText= (EditText) view.findViewById(R.id.new_task_title);
+        title = editText.getText().toString().trim();
+
+        // Any Task starting with test will have no penalty
+        if (Pattern.matches("(t|T)est\\d?.*", title)){
+            mPenalty = 0;
+        }
+
+        //Verify task with user
+        if (mPenalty > 0){
+            String dialogTitle = "Put yourself on the hook for $" + Integer.toString(mPenalty) + "?";
+            String message = "This task will be due in " + new Utility().dialogTime(mdate);
+            AlertDialog.Builder builder = new AlertDialog.Builder(this);
+            builder.setMessage(message);
+            builder.setTitle(dialogTitle);
+            builder.setPositiveButton(R.string.save_task_dialog_confirm, new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    saveTask();
+                }
+            });
+            builder.setNegativeButton(R.string.save_task_dialog_cancel, new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    //?
+                }
+            });
+
+
+            AlertDialog dialog = builder.create();
+            dialog.show();
+        } else {
+            saveTask();
+        }
+    }
+
+    public void saveTask(){
+
+        NewTaskFragment frag = (NewTaskFragment) getSupportFragmentManager().findFragmentById(R.id.new_task_fragment);
+        View view = frag.getView();
+        EditText editText= (EditText) view.findViewById(R.id.new_task_title);
+        String title = editText.getText().toString().trim();
+
+        Long addedDate = Calendar.getInstance().getTimeInMillis();
+
+        // Check if the freebie button is on
+        ToggleButton toggleButton = (ToggleButton) findViewById(R.id.new_task_freebie_toggle);
+        // Reduce their number of freebies available
+        if (toggleButton.isChecked()){
+
             SharedPreferences settings = getSharedPreferences(OauthActivity.PREF_NAME, MODE_PRIVATE);
             int haveFree = settings.getInt(OauthActivity.PREF_FREEBIES,0);
             SharedPreferences.Editor editor = settings.edit();
@@ -174,16 +230,6 @@ public class NewTask extends ActionBarActivity implements TimePickerDialog.OnTim
             editor.commit();
         }
 
-        NewTaskFragment frag = (NewTaskFragment) getSupportFragmentManager().findFragmentById(R.id.new_task_fragment);
-        View view = frag.getView();
-        EditText editText= (EditText) view.findViewById(R.id.new_task_title);
-        title = editText.getText().toString().trim();
-        Long addedDate = Calendar.getInstance().getTimeInMillis();
-
-        // Any Task starting with test will have no penalty
-        if (Pattern.matches("(t|T)est\\d?.*", title)){
-            penalty = 0;
-        }
 
         if (retryNumber > 0){
             new Utility().deleteTaskFromTitle(title, this);
@@ -194,14 +240,13 @@ public class NewTask extends ActionBarActivity implements TimePickerDialog.OnTim
         values.put(TaskContract.TaskEntry.COLUMN_ADDED_DATE, addedDate);
         values.put(TaskContract.TaskEntry.COLUMN_TITLE, title);
         values.put(TaskContract.TaskEntry.COLUMN_DUE_DATE, mdate);
-        values.put(TaskContract.TaskEntry.COLUMN_PENALTY, penalty);
+        values.put(TaskContract.TaskEntry.COLUMN_PENALTY, mPenalty);
         values.put(TaskContract.TaskEntry.COLUMN_RETRY_COUNT, retryNumber);
 
         db.insert(TaskContract.TaskEntry.TABLE_NAME, null, values);
-        Toast t = new Toast(context).makeText(context, "Added!", Toast.LENGTH_LONG);
-        t.show();
 
-        setNotifications(title, mdate, penalty);
+
+        setNotifications(title, mdate, mPenalty);
 
         this.finish();
 
@@ -212,7 +257,6 @@ public class NewTask extends ActionBarActivity implements TimePickerDialog.OnTim
         int hour_id;
         int day_id;
         int pay_id;
-        int send_id;
 
         int hourMili = 60*60*1000;
         int dayMili = 24*hourMili;
@@ -227,7 +271,6 @@ public class NewTask extends ActionBarActivity implements TimePickerDialog.OnTim
         hour_id = base_id * 100 + 60; // 60 min in an hour
         day_id = base_id * 100 + 24; // 24 hours in a day
         pay_id = base_id * 100 + 55; // 55 = $$
-        send_id = base_id *100 + 88; // 88 = BB aka Beemineder
 
         AlarmManager alarmManager = (AlarmManager) getSystemService(ALARM_SERVICE);
 

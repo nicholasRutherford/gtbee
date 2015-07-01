@@ -25,7 +25,10 @@ import java.util.Locale;
  * Created by nick on 11/06/15.
  */
 public class Utility {
-    private static final int day_mili = 24*60*60*1000;
+    private static final long sec_mili = 1000l;
+    private static final long min_mili = 60*sec_mili;
+    private static final long hour_mili = 60*min_mili;
+    private static final long day_mili = 24*hour_mili;
     private static final int buffer_time = 1000*60;
 
     public String formatPenalty(int penalty){
@@ -183,6 +186,23 @@ public class Utility {
         } else {
             return 2430;
         }
+    }
+
+    public String dialogTime(Long dueDate){
+        Long currentDate = Calendar.getInstance().getTimeInMillis();
+        Long diff = dueDate - currentDate;
+        if (diff < sec_mili){
+            return Long.toString(diff) + " miliseconds.";
+        } else if (diff <min_mili){
+            return Integer.toString((int) Math.floor(diff/sec_mili)) + " seconds.";
+        } else if (diff < hour_mili){
+            return Integer.toString((int) Math.floor(diff/min_mili)) + " minutes.";
+        } else if (diff < day_mili){
+            return Integer.toString((int) Math.floor(diff/hour_mili)) + " hours.";
+        } else {
+            return Integer.toString((int) Math.floor(diff/day_mili)) + " days.";
+        }
+
     }
 
     public void deleteTaskFromTitle(String title, Context context){

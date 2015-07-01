@@ -31,4 +31,8 @@
     <string name="beeminder_int_explanation">Select a current Beeminder goal, and then whenever you add a task to GTBee we\'ll automatically add a data point to that goal.</string>
     <string name="beeminder_goal">Goal: </string>
 
+    <string name="save_task_dialog_title">Put yourself on the hook?</string>
+    <string name="save_task_dialog_confirm">Create Task</string>
+    <string name="save_task_dialog_cancel">Cancel</string>
+
 </resources>
