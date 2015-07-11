@@ -7,16 +7,12 @@ import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
-import android.text.format.Time;
-import android.util.Log;
 
 import com.beeminder.gtbee.data.TaskContract;
 import com.beeminder.gtbee.data.TaskDbHelper;
 import com.beeminder.gtbee.services.PaymentService;
 import com.beeminder.gtbee.services.ReminderService;
 
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.Locale;
@@ -211,7 +207,7 @@ public class Utility {
 
 
         SQLiteDatabase db = new TaskDbHelper(context).getWritableDatabase();
-        Cursor cur = db.query(TaskContract.TaskEntry.TABLE_NAME,
+        Cursor cur = db.query(TaskDbHelper.TABLE_NAME,
                 new String[]{"_ID"},
                 "title=\"" + title + "\"",
                 null, null, null, null);
@@ -221,7 +217,7 @@ public class Utility {
         int day_id = base_id * 100 + 24; // 24 hours in a day
         int pay_id = base_id * 100 + 55; // 55 = $$
 
-        String where = TaskContract.TaskEntry._ID +"=\""+ base_id +"\";";
+        String where = TaskDbHelper.COLUMN_ID +"=\""+ base_id +"\";";
 
         // Clear current notifications
         NotificationManager mNotifyMgr = (NotificationManager) context.getSystemService(context.NOTIFICATION_SERVICE);
@@ -262,7 +258,7 @@ public class Utility {
 
         // Remove entry from table
         db.delete(
-                TaskContract.TaskEntry.TABLE_NAME,
+                TaskDbHelper.TABLE_NAME,
                 where,
                 null);
 

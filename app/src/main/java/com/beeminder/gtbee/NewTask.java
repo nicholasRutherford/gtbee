@@ -4,8 +4,6 @@ import android.app.AlarmManager;
 import android.app.AlertDialog;
 import android.app.DatePickerDialog;
 import android.app.DialogFragment;
-import android.app.Notification;
-import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.app.TimePickerDialog;
 import android.content.ContentValues;
@@ -16,7 +14,6 @@ import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.preference.PreferenceManager;
-import android.support.v4.app.NotificationCompat;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -239,13 +236,13 @@ public class NewTask extends ActionBarActivity implements TimePickerDialog.OnTim
         Context context = getApplicationContext();
         SQLiteDatabase db = new TaskDbHelper(context).getWritableDatabase();
         ContentValues values = new ContentValues();
-        values.put(TaskContract.TaskEntry.COLUMN_ADDED_DATE, addedDate);
-        values.put(TaskContract.TaskEntry.COLUMN_TITLE, title);
-        values.put(TaskContract.TaskEntry.COLUMN_DUE_DATE, mdate);
-        values.put(TaskContract.TaskEntry.COLUMN_PENALTY, mPenalty);
-        values.put(TaskContract.TaskEntry.COLUMN_RETRY_COUNT, retryNumber);
+        values.put(TaskDbHelper.COLUMN_ADDED_DATE, addedDate);
+        values.put(TaskDbHelper.COLUMN_TITLE, title);
+        values.put(TaskDbHelper.COLUMN_DUE_DATE, mdate);
+        values.put(TaskDbHelper.COLUMN_PENALTY, mPenalty);
+        values.put(TaskDbHelper.COLUMN_RETRY_COUNT, retryNumber);
 
-        db.insert(TaskContract.TaskEntry.TABLE_NAME, null, values);
+        db.insert(TaskDbHelper.TABLE_NAME, null, values);
 
 
         setNotifications(title, mdate, mPenalty);
@@ -264,7 +261,7 @@ public class NewTask extends ActionBarActivity implements TimePickerDialog.OnTim
         int dayMili = 24*hourMili;
 
         SQLiteDatabase db = new TaskDbHelper(getApplicationContext()).getWritableDatabase();
-        Cursor cur = db.query(TaskContract.TaskEntry.TABLE_NAME,
+        Cursor cur = db.query(TaskDbHelper.TABLE_NAME,
                 new String[]{"_ID"},
                 "title=\"" + title + "\"",
                 null, null, null, null);

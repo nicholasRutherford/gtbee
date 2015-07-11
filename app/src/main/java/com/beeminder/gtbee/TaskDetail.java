@@ -1,23 +1,16 @@
 package com.beeminder.gtbee;
 
-import android.app.AlarmManager;
-import android.app.NotificationManager;
-import android.app.PendingIntent;
-import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 
 import com.beeminder.gtbee.data.TaskContract;
 import com.beeminder.gtbee.data.TaskDbHelper;
-import com.beeminder.gtbee.services.PaymentService;
-import com.beeminder.gtbee.services.ReminderService;
 
 import java.util.Calendar;
 
@@ -32,7 +25,7 @@ public class TaskDetail extends ActionBarActivity {
         mTitle = intent.getStringExtra(TaskFragment.EXTRA_MESSAGE);
 
         SQLiteDatabase db = new TaskDbHelper(this).getWritableDatabase();
-        Cursor cur = db.query(TaskContract.TaskEntry.TABLE_NAME,
+        Cursor cur = db.query(TaskDbHelper.TABLE_NAME,
                 null,
                 "title=\"" + mTitle + "\"",
                 null, null, null, null);
@@ -88,7 +81,7 @@ public class TaskDetail extends ActionBarActivity {
     public void renewTask(View view){
 
         SQLiteDatabase db = new TaskDbHelper(this).getWritableDatabase();
-        Cursor cur = db.query(TaskContract.TaskEntry.TABLE_NAME,
+        Cursor cur = db.query(TaskDbHelper.TABLE_NAME,
                 null,
                 "title=\"" + mTitle + "\"",
                 null, null, null, null);

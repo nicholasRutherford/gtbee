@@ -2,10 +2,8 @@ package com.beeminder.gtbee.services;
 
 import android.app.IntentService;
 import android.content.Intent;
-import android.content.Context;
 import android.util.Log;
 
-import com.beeminder.gtbee.TaskFragment;
 import com.beeminder.gtbee.Utility;
 import com.beeminder.gtbee.data.TaskContract;
 

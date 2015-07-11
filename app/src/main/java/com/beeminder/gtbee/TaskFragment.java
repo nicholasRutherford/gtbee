@@ -1,15 +1,9 @@
 package com.beeminder.gtbee;
 
-import android.content.ContentValues;
 import android.content.Intent;
 import android.database.Cursor;
-import android.database.sqlite.SQLiteDatabase;
 import android.support.v4.app.Fragment;
 import android.os.Bundle;
-import android.support.v4.app.LoaderManager;
-import android.support.v4.content.CursorLoader;
-import android.support.v4.content.Loader;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -38,8 +32,8 @@ public class TaskFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        cursor = new TaskDbHelper(this.getActivity()).getReadableDatabase().query(TaskContract.TaskEntry.TABLE_NAME,
-                null, null, null, null, null, TaskContract.TaskEntry.COLUMN_DUE_DATE + " ASC;");
+        cursor = new TaskDbHelper(this.getActivity()).getReadableDatabase().query(TaskDbHelper.TABLE_NAME,
+                null, null, null, null, null, TaskDbHelper.COLUMN_DUE_DATE + " ASC;");
         mTaskAdapter = new TaskAdapter(getActivity(), cursor, 0);
 
         View rootView = inflater.inflate(R.layout.fragment_main, container, false);

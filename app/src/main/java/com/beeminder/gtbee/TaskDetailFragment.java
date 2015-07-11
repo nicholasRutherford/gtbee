@@ -38,7 +38,7 @@ public class TaskDetailFragment extends Fragment {
         String title = ((TaskDetail) getActivity()).mTitle;
 
         SQLiteDatabase db = new TaskDbHelper(getActivity()).getWritableDatabase();
-        Cursor cur = db.query(TaskContract.TaskEntry.TABLE_NAME,
+        Cursor cur = db.query(TaskDbHelper.TABLE_NAME,
                 null,
                 "title=\"" + title + "\"",
                 null, null, null, null);
