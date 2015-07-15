@@ -28,7 +28,6 @@ import android.widget.Toast;
 import android.widget.ToggleButton;
 
 import com.beeminder.gtbee.auth.OauthActivity;
-import com.beeminder.gtbee.data.TaskContract;
 import com.beeminder.gtbee.data.TaskDbHelper;
 import com.beeminder.gtbee.integrations.BeeminederIntActivity;
 import com.beeminder.gtbee.services.BeeminederIntSendDataService;

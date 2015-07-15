@@ -9,7 +9,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 
-import com.beeminder.gtbee.data.TaskContract;
+
 import com.beeminder.gtbee.data.TaskDbHelper;
 
 import java.util.Calendar;

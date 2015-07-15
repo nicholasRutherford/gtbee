@@ -10,7 +10,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-import com.beeminder.gtbee.data.TaskContract;
 import com.beeminder.gtbee.data.TaskDbHelper;
 
 import java.util.Calendar;

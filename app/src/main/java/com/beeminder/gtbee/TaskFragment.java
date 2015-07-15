@@ -11,7 +11,7 @@ import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.TextView;
 
-import com.beeminder.gtbee.data.TaskContract;
+
 import com.beeminder.gtbee.data.TaskDbHelper;
 
 

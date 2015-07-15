@@ -5,7 +5,6 @@ import android.content.Intent;
 import android.util.Log;
 
 import com.beeminder.gtbee.Utility;
-import com.beeminder.gtbee.data.TaskContract;
 
 /**
  * An {@link IntentService} subclass for handling asynchronous task requests in

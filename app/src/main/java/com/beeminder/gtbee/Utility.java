@@ -8,7 +8,6 @@ import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 
-import com.beeminder.gtbee.data.TaskContract;
 import com.beeminder.gtbee.data.TaskDbHelper;
 import com.beeminder.gtbee.services.PaymentService;
 import com.beeminder.gtbee.services.ReminderService;
@@ -105,7 +104,7 @@ public class Utility {
 
         String hour = Integer.toString(rawHour);
         String min = String.format("%02d", cal.get(Calendar.MINUTE));
-        String ampm = cal.getDisplayName(Calendar.AM_PM, Calendar.LONG, Locale.getDefault()).toUpperCase();
+        String ampm = cal.getDisplayName(Calendar.AM_PM, Calendar.LONG, Locale.getDefault()).toLowerCase();
 
         return hour + ":" + min + " " + ampm;
     }
@@ -202,9 +201,6 @@ public class Utility {
     }
 
     public void deleteTaskFromTitle(String title, Context context){
-
-
-
 
         SQLiteDatabase db = new TaskDbHelper(context).getWritableDatabase();
         Cursor cur = db.query(TaskDbHelper.TABLE_NAME,
