@@ -99,6 +99,10 @@
             android:enabled="true"
             android:exported="false" >
         </service>
+        <service
+            android:name=".services.OverdueService"
+            android:exported="false" >
+        </service>
     </application>
 
 </manifest>

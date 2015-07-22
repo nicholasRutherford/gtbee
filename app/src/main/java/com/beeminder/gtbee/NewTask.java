@@ -229,9 +229,11 @@ public class NewTask extends ActionBarActivity implements TimePickerDialog.OnTim
         }
 
 
+        // Creating a new task from an overdue task, so remove the old task
         if (retryNumber > 0){
             new Utility().deleteTaskFromTitle(title, this);
         }
+
         Context context = getApplicationContext();
         SQLiteDatabase db = new TaskDbHelper(context).getWritableDatabase();
         ContentValues values = new ContentValues();

@@ -6,6 +6,8 @@ import android.app.PendingIntent;
 import android.app.Service;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.IBinder;
@@ -21,22 +23,13 @@ import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 import com.beeminder.gtbee.Utility;
 import com.beeminder.gtbee.auth.OauthActivity;
+import com.beeminder.gtbee.data.PaymentRequestDbHelper;
 
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 import java.util.Calendar;
 
 public class PaymentService extends IntentService {
-
-    public static final String TASK_TITLE = "com.beeminder.gtbee.task_title";
-    public static final String TASK_ID = "com.beeminder.gtbee.task_id";
-    public static final String ATTEMPT_NUMBER = "com.beeminder.gtbee.attempt_number";
-    public static final String PAYMENT_AMOUNT = "com.beeminder.gtbee.payment_amount";
-
-    public static final int MAX_ATTEMPS = 50;
-    public static final int BASE_TIME = 30*1000; //30 sec
-
-    private Intent mIntent;
 
 
     public PaymentService() {
@@ -45,28 +38,37 @@ public class PaymentService extends IntentService {
 
     @Override
     protected void onHandleIntent(Intent intent) {
-        mIntent = intent;
-        String title = intent.getStringExtra(TASK_TITLE);
-        int attempt = intent.getIntExtra(ATTEMPT_NUMBER, 0);
-        int payment = intent.getIntExtra(PAYMENT_AMOUNT, 0);
+        SQLiteDatabase db = new PaymentRequestDbHelper(this).getWritableDatabase();
+        Cursor cursor = db.query(
+                PaymentRequestDbHelper.TABLE_NAME, // Table name
+                null, // columns
 
-        // Check if we've reached maximum attemps
-        if(attempt > MAX_ATTEMPS){
-            Log.v("PaymentService", "Hit Maximum attempts("+ Integer.toString(MAX_ATTEMPS)
-                    +  ") on: " + title);
-            return;
-        }
+                //where
+                PaymentRequestDbHelper.COLUMN_PAYMENT_STATUS + "=\"" +
+                PaymentRequestDbHelper.NOT_CHARGED + "\"",
+
+                null, // Where args
+                null, // groupby
+                null, // having
+                null // orderby
+                );
+
 
         // Check that there is an internet connection
         ConnectivityManager cm = (ConnectivityManager) getSystemService(CONNECTIVITY_SERVICE);
         NetworkInfo activeNetwork = cm.getActiveNetworkInfo();
         boolean isConnected = activeNetwork != null && activeNetwork.isConnectedOrConnecting();
         if (!isConnected){
-            Log.v("PaymentService", "No connection, reschudeling payment(attempt "
-                    + Integer.toString(attempt) + ")");
-            requeueIntent();
+            Log.v("PaymentService", "No connection");
             return;
         }
+
+        //loop time!
+        while (cursor.moveToNext()){
+            //todo
+        }
+        cursor.close();
+        db.close();
 
 
         SharedPreferences settings = getSharedPreferences(OauthActivity.PREF_NAME, MODE_PRIVATE);
@@ -112,39 +114,12 @@ public class PaymentService extends IntentService {
                                 editor.putString(OauthActivity.PREF_ACCESS_TOKEN, null);
                                 editor.commit();
                             }
-                            requeueIntent();
                     }
                 });
 
 
         queue.add(stringRequest);
 
-
-    }
-
-    private void requeueIntent(){
-        String title = mIntent.getStringExtra(TASK_TITLE);
-        int base_id = mIntent.getIntExtra(TASK_ID, 0);
-        int attemptNumber = mIntent.getIntExtra(ATTEMPT_NUMBER, 0) + 1;
-        int paymentAmount = mIntent.getIntExtra(PAYMENT_AMOUNT, 0);
-
-        int pay_id = base_id*100 + 55;
-
-        Long currentTime = Calendar.getInstance().getTimeInMillis();
-        Long dueTime = currentTime + (BASE_TIME * Math.round(Math.pow(2, attemptNumber)));
-
-
-        Intent intentPayment = new Intent(this, PaymentService.class);
-        intentPayment.putExtra(TASK_TITLE, title);
-        intentPayment.putExtra(TASK_ID, base_id);
-        intentPayment.putExtra(ATTEMPT_NUMBER, attemptNumber);
-        intentPayment.putExtra(PAYMENT_AMOUNT, paymentAmount);
-
-        PendingIntent pendingIntentPayment = PendingIntent.getService(this, pay_id, intentPayment, PendingIntent.FLAG_UPDATE_CURRENT);
-
-        AlarmManager alarmManager = (AlarmManager) getSystemService(ALARM_SERVICE);
-        alarmManager.set(AlarmManager.RTC_WAKEUP, dueTime, pendingIntentPayment);
-        Log.v("PaymentService", "Payment reschedueled for: " + new Utility().niceDateTime(dueTime));
 
     }
 }

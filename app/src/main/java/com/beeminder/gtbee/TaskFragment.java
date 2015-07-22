@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.database.Cursor;
 import android.support.v4.app.Fragment;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -44,6 +45,8 @@ public class TaskFragment extends Fragment {
 
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int position, long l) {
+                Log.v("TaskFragment", "id: "+ Integer.toString(view.getId()));
+                Log.v("TaskFragment", "l: " + Long.toString(l));
 
                 TextView textView = (TextView) view.findViewById(R.id.list_item_title);
                 String title = textView.getText().toString();
