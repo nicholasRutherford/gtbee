@@ -103,6 +103,11 @@
             android:name=".services.OverdueService"
             android:exported="false" >
         </service>
+        <provider
+            android:authorities="com.beeminder.gtbee.provider"
+            android:name=".data.ContentProvider"
+            android:enabled="true"
+            android:exported="false"/>
     </application>
 
 </manifest>

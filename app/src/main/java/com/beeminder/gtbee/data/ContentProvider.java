@@ -21,14 +21,16 @@ public class ContentProvider extends android.content.ContentProvider {
     private static final UriMatcher sUriMatcher = new UriMatcher(UriMatcher.NO_MATCH);
 
     static {
-        sUriMatcher.addURI(TaskContract.CONTENT_AUTHORITY, "active", ACTIVE_TASKS);
-        sUriMatcher.addURI(TaskContract.CONTENT_AUTHORITY, "old", OLD_TASKS);
-        sUriMatcher.addURI(TaskContract.CONTENT_AUTHORITY, "network_pending", NETWORK_PENDING);
-        sUriMatcher.addURI(TaskContract.CONTENT_AUTHORITY, "network_pending/payment", NETWORK_PENDING_PAYMENT);
-        sUriMatcher.addURI(TaskContract.CONTENT_AUTHORITY, "network_pending/beeminder_int", NETWORK_PENDING_BEEMINDER_INT);
+        sUriMatcher.addURI(Contract.CONTENT_AUTHORITY, "active", ACTIVE_TASKS);
+        sUriMatcher.addURI(Contract.CONTENT_AUTHORITY, "old", OLD_TASKS);
+        sUriMatcher.addURI(Contract.CONTENT_AUTHORITY, "network_pending", NETWORK_PENDING);
+        sUriMatcher.addURI(Contract.CONTENT_AUTHORITY, "network_pending/payment", NETWORK_PENDING_PAYMENT);
+        sUriMatcher.addURI(Contract.CONTENT_AUTHORITY, "network_pending/beeminder_int", NETWORK_PENDING_BEEMINDER_INT);
     }
 
     private DbHelper mDbHelper;
+
+
 
 
     @Override
@@ -71,7 +73,24 @@ public class ContentProvider extends android.content.ContentProvider {
     @Override
     public String getType(Uri uri) {
 
-        // return the MIME type corresponding to a content URI
+        switch (sUriMatcher.match(uri)) {
+            case ACTIVE_TASKS:
+                break;
+            case OLD_TASKS:
+                Log.v(LOG_TAG, "Old tasks");
+                break;
+            case NETWORK_PENDING:
+                Log.v(LOG_TAG, "Network pending");
+                break;
+            case NETWORK_PENDING_PAYMENT:
+                Log.v(LOG_TAG, "Network pending payments");
+                break;
+            case NETWORK_PENDING_BEEMINDER_INT:
+                Log.v(LOG_TAG, "Network prending beeminder int");
+                break;
+            default:
+                Log.e(LOG_TAG, "Did not match any URIs for: " + uri.toString());
+        }
         return null;
     }
 
