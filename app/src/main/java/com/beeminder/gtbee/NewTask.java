@@ -28,7 +28,9 @@ import android.widget.Toast;
 import android.widget.ToggleButton;
 
 import com.beeminder.gtbee.auth.OauthActivity;
+import com.beeminder.gtbee.data.Contract;
 import com.beeminder.gtbee.data.TaskDbHelper;
+import com.beeminder.gtbee.data.DbHelper;
 import com.beeminder.gtbee.integrations.BeeminederIntActivity;
 import com.beeminder.gtbee.services.BeeminederIntSendDataService;
 import com.beeminder.gtbee.services.PaymentService;
@@ -235,18 +237,18 @@ public class NewTask extends ActionBarActivity implements TimePickerDialog.OnTim
         }
 
         Context context = getApplicationContext();
-        SQLiteDatabase db = new TaskDbHelper(context).getWritableDatabase();
+        SQLiteDatabase db = new DbHelper(context).getWritableDatabase();
         ContentValues values = new ContentValues();
-        values.put(TaskDbHelper.COLUMN_ADDED_DATE, addedDate);
-        values.put(TaskDbHelper.COLUMN_TITLE, title);
-        values.put(TaskDbHelper.COLUMN_DUE_DATE, mdate);
-        values.put(TaskDbHelper.COLUMN_PENALTY, mPenalty);
-        values.put(TaskDbHelper.COLUMN_RETRY_COUNT, retryNumber);
+        values.put(Contract.KEY_ADDED_DATE, addedDate);
+        values.put(Contract.KEY_TITLE, title);
+        values.put(Contract.KEY_DUE_DATE, mdate);
+        values.put(Contract.KEY_PENALTY, mPenalty);
+        values.put(Contract.KEY_DESCRIPTION, "");
 
-        db.insert(TaskDbHelper.TABLE_NAME, null, values);
+        getContentResolver().insert(Contract.ACTIVE_TASKS_URI, values);
 
 
-        setNotifications(title, mdate, mPenalty);
+        //setNotifications(title, mdate, mPenalty);
 
         this.finish();
 
@@ -305,16 +307,17 @@ public class NewTask extends ActionBarActivity implements TimePickerDialog.OnTim
 
         // Set payment alarm
         if (penalty > 0 ) {
-            Intent intentPayment = new Intent(this, PaymentService.class);
-            intentPayment.putExtra(PaymentService.TASK_TITLE, title);
-            intentPayment.putExtra(PaymentService.TASK_ID, base_id);
-            intentPayment.putExtra(PaymentService.ATTEMPT_NUMBER, 0);
-            intentPayment.putExtra(PaymentService.PAYMENT_AMOUNT, penalty);
-
-            PendingIntent pendingIntentPayment = PendingIntent.getService(this, pay_id, intentPayment, PendingIntent.FLAG_UPDATE_CURRENT);
-
-            alarmManager.set(AlarmManager.RTC_WAKEUP, mdate, pendingIntentPayment);
-            Log.v("newTask", "Payment set for: " + new Utility().niceDateTime(mdate));
+            //TODO
+//            Intent intentPayment = new Intent(this, PaymentService.class);
+//            intentPayment.putExtra(PaymentService.TASK_TITLE, title);
+//            intentPayment.putExtra(PaymentService.TASK_ID, base_id);
+//            intentPayment.putExtra(PaymentService.ATTEMPT_NUMBER, 0);
+//            intentPayment.putExtra(PaymentService.PAYMENT_AMOUNT, penalty);
+//
+//            PendingIntent pendingIntentPayment = PendingIntent.getService(this, pay_id, intentPayment, PendingIntent.FLAG_UPDATE_CURRENT);
+//
+//            alarmManager.set(AlarmManager.RTC_WAKEUP, mdate, pendingIntentPayment);
+//            Log.v("newTask", "Payment set for: " + new Utility().niceDateTime(mdate));
         }
 
         SharedPreferences settings = getSharedPreferences(OauthActivity.PREF_NAME, MODE_PRIVATE);

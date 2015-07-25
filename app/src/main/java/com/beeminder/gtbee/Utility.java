@@ -244,13 +244,14 @@ public class Utility {
 
 
         // Remove payment alarm
-        Intent intentPayment = new Intent(context, PaymentService.class);
-        intentPayment.putExtra(PaymentService.TASK_TITLE, title);
-        intentPayment.putExtra(PaymentService.TASK_ID, base_id);
-        intentPayment.putExtra(PaymentService.ATTEMPT_NUMBER, 0);
+        //TODO
+//        Intent intentPayment = new Intent(context, PaymentService.class);
+//        intentPayment.putExtra(PaymentService.TASK_TITLE, title);
+//        intentPayment.putExtra(PaymentService.TASK_ID, base_id);
+//        intentPayment.putExtra(PaymentService.ATTEMPT_NUMBER, 0);
 
-        PendingIntent pendingIntentPayment = PendingIntent.getService(context, pay_id, intentPayment, PendingIntent.FLAG_UPDATE_CURRENT);
-        alarmManager.cancel(pendingIntentPayment);
+//        PendingIntent pendingIntentPayment = PendingIntent.getService(context, pay_id, intentPayment, PendingIntent.FLAG_UPDATE_CURRENT);
+//        alarmManager.cancel(pendingIntentPayment);
 
         // Remove entry from table
         db.delete(

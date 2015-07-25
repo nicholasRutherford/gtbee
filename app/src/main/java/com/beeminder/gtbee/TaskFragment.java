@@ -2,8 +2,12 @@ package com.beeminder.gtbee;
 
 import android.content.Intent;
 import android.database.Cursor;
+import android.net.Uri;
 import android.support.v4.app.Fragment;
 import android.os.Bundle;
+import android.support.v4.app.LoaderManager;
+import android.support.v4.content.CursorLoader;
+import android.support.v4.content.Loader;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -13,13 +17,16 @@ import android.widget.ListView;
 import android.widget.TextView;
 
 
+import com.beeminder.gtbee.data.ContentProvider;
+import com.beeminder.gtbee.data.Contract;
 import com.beeminder.gtbee.data.TaskDbHelper;
 
 
 /**
  * A placeholder fragment containing a simple view.
  */
-public class TaskFragment extends Fragment {
+public class TaskFragment extends Fragment implements LoaderManager.LoaderCallbacks<Cursor>{
+    public static final int UNIQUE_LOADER_TASK_FRAGMENT = 1;
     public TaskAdapter mTaskAdapter;
     private ListView mListView;
     public final static String EXTRA_MESSAGE = "com.beeminder.gtbee.TITLE_MESSAGE";
@@ -33,10 +40,8 @@ public class TaskFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        cursor = new TaskDbHelper(this.getActivity()).getReadableDatabase().query(TaskDbHelper.TABLE_NAME,
-                null, null, null, null, null, TaskDbHelper.COLUMN_DUE_DATE + " ASC;");
-        mTaskAdapter = new TaskAdapter(getActivity(), cursor, 0);
 
+        mTaskAdapter = new TaskAdapter(getActivity(), null, 0);
         View rootView = inflater.inflate(R.layout.fragment_main, container, false);
 
         mListView = (ListView) rootView.findViewById(R.id.Task_list);
@@ -45,7 +50,7 @@ public class TaskFragment extends Fragment {
 
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int position, long l) {
-                Log.v("TaskFragment", "id: "+ Integer.toString(view.getId()));
+                Log.v("TaskFragment", "id: " + Integer.toString(view.getId()));
                 Log.v("TaskFragment", "l: " + Long.toString(l));
 
                 TextView textView = (TextView) view.findViewById(R.id.list_item_title);
@@ -57,13 +62,25 @@ public class TaskFragment extends Fragment {
         });
 
 
+        getLoaderManager().initLoader(UNIQUE_LOADER_TASK_FRAGMENT, null, this);
         return rootView;
     }
 
+
     @Override
-    public void onResume() {
-        super.onResume();
-        cursor.requery();
-        mTaskAdapter.notifyDataSetChanged();
+    public Loader<Cursor> onCreateLoader(int id, Bundle args) {
+        return new CursorLoader(getActivity(), Contract.ACTIVE_TASKS_URI, null, null, null, Contract.KEY_DUE_DATE + " ASC");
+    }
+
+    @Override
+    public void onLoadFinished(Loader<Cursor> loader, Cursor data) {
+        mTaskAdapter.swapCursor(data);
+
+    }
+
+    @Override
+    public void onLoaderReset(Loader<Cursor> loader) {
+        mTaskAdapter.swapCursor(null);
+
     }
 }
