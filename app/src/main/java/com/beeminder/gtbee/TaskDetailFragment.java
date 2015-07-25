@@ -1,7 +1,6 @@
 package com.beeminder.gtbee;
 
 import android.database.Cursor;
-import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.os.CountDownTimer;
 import android.support.v4.app.Fragment;
@@ -10,7 +9,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-import com.beeminder.gtbee.data.TaskDbHelper;
+import com.beeminder.gtbee.data.Contract;
 
 import java.util.Calendar;
 
@@ -34,22 +33,18 @@ public class TaskDetailFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_task_detail, container, false);
-        String title = ((TaskDetail) getActivity()).mTitle;
+        Long taskID = ((TaskDetail) getActivity()).mTaskId;
 
-        SQLiteDatabase db = new TaskDbHelper(getActivity()).getWritableDatabase();
-        Cursor cur = db.query(TaskDbHelper.TABLE_NAME,
-                null,
-                "title=\"" + title + "\"",
-                null, null, null, null);
+        Cursor cur = getActivity().getContentResolver().query(Contract.ACTIVE_TASKS_URI,
+                null, Contract.KEY_ID + "=" + taskID, null, null);
 
         cur.moveToFirst();
-        Long dateAdded = cur.getLong(TaskDbHelper.COL_ADDED_DATE);
-        Long dateDue = cur.getLong(TaskDbHelper.COL_DUE_DATE);
-        int penalty = cur.getInt(TaskDbHelper.COL_PENALTY);
+        Long dateAdded = cur.getLong(cur.getColumnIndex(Contract.KEY_ADDED_DATE));
+        Long dateDue = cur.getLong(cur.getColumnIndex(Contract.KEY_DUE_DATE));
+        int penalty = cur.getInt(cur.getColumnIndex(Contract.KEY_PENALTY));
 
         TextView dateAddedView = (TextView) view.findViewById(R.id.detail_task_date_added);
         dateAddedView.setText(new Utility().niceDateTime(dateAdded));
-
 
         TextView dateDueView = (TextView) view.findViewById(R.id.detail_task_date_due);
         dateDueView.setText(new Utility().niceDateTime(dateDue));
@@ -89,10 +84,13 @@ public class TaskDetailFragment extends Fragment {
             }
 
             public void onFinish(){
+                //TODO change fragment to past due one
                 secTimer.setText("0");
+
             }
         }.start();
 
         return view;
     }
+
 }

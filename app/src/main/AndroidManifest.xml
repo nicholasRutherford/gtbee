@@ -103,11 +103,25 @@
             android:name=".services.OverdueService"
             android:exported="false" >
         </service>
+
         <provider
-            android:authorities="com.beeminder.gtbee.provider"
             android:name=".data.ContentProvider"
+            android:authorities="com.beeminder.gtbee.provider"
             android:enabled="true"
-            android:exported="false"/>
+            android:exported="false" />
+
+        <receiver android:name=".services.NetworkStateReceiver" >
+            <intent-filter>
+                <action android:name="android.net.conn.CONNECTIVITY_CHANGE" />
+                <action android:name="android.net.wifi.WIFI_STATE_CHANGED" />
+            </intent-filter>
+        </receiver>
+
+        <activity
+            android:name=".FailedTaskActivity"
+            android:label="@string/title_activity_failed_task"
+            android:parentActivityName=".MainActivity">
+        </activity>
     </application>
 
 </manifest>

@@ -34,5 +34,6 @@
     <string name="save_task_dialog_title">Put yourself on the hook?</string>
     <string name="save_task_dialog_confirm">Create Task</string>
     <string name="save_task_dialog_cancel">Cancel</string>
+    <string name="title_activity_failed_task">FailedTaskActivity</string>
 
 </resources>

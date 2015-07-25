@@ -26,6 +26,7 @@ public class ReminderService extends IntentService {
     public static final String REMINDER_TITLE = "com.beeminder.gtbee.reminder_title";
     public static final String REMINDER_TEXT = "com.beeminder.gtbee.reminder_text";
     public static final String REMINDER_ID = "com.beeminder.gtbee.reminder_id";
+    public static final String BASE_ID = "com.beeminder.gtbee.reminder_base_id";
 
 
     public ReminderService() {
@@ -42,6 +43,7 @@ public class ReminderService extends IntentService {
         String title = intent.getStringExtra(REMINDER_TITLE);
         String text = intent.getStringExtra(REMINDER_TEXT);
         int notification_id = intent.getIntExtra(REMINDER_ID, 0);
+        long baseID = intent.getIntExtra(BASE_ID, -1);
         Log.v("ReminderService", title);
         Log.v("ReminderService", "ID: " + Integer.toString(notification_id));
 
@@ -62,7 +64,7 @@ public class ReminderService extends IntentService {
 
             // Click notification action
             Intent resultIntent = new Intent(this, TaskDetail.class);
-            resultIntent.putExtra(TaskFragment.EXTRA_MESSAGE, task_title);
+            resultIntent.putExtra(TaskDetail.KEY_ID, baseID);
 
             PendingIntent resultPendingIntent = PendingIntent.getActivity(
                     this, 0, resultIntent, PendingIntent.FLAG_UPDATE_CURRENT);
@@ -74,7 +76,6 @@ public class ReminderService extends IntentService {
             doneIntent.putExtra(DeleteTaskService.TASK_TITLE, task_title);
             PendingIntent pDoneIntent = PendingIntent.getService(this, notification_id * 10 + 2,
                     doneIntent, PendingIntent.FLAG_CANCEL_CURRENT);
-            Log.v("ReminderService", "DeleteTask set for: " + task_title);
 
             mBuilder.addAction(R.drawable.ic_done_black_24dp, "Done!", pDoneIntent);
 

@@ -100,8 +100,7 @@ public class MainActivity extends ActionBarActivity {
 
     public void add_task(View view){
         Intent intent = new Intent(this, NewTask.class);
-        intent.putExtra(NewTask.TASK_NAME, "");
-        intent.putExtra(NewTask.RETRY_NUMBER, 0);
+        intent.putExtra(NewTask.KEY_RETRY_NUMBER, 0);
         startActivity(intent);
     }
 
@@ -115,5 +114,11 @@ public class MainActivity extends ActionBarActivity {
         Intent intent = new Intent(this, BeeminederIntActivity.class);
         startActivity(intent);
 
+    }
+
+    public void startFailed(View view){
+        mDrawerLayout.closeDrawers();
+        Intent intent = new Intent(this, FailedTaskActivity.class);
+        startActivity(intent);
     }
 }

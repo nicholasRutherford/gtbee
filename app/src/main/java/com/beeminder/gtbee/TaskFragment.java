@@ -25,7 +25,7 @@ public class TaskFragment extends Fragment implements LoaderManager.LoaderCallba
     public static final int UNIQUE_LOADER_TASK_FRAGMENT = 1;
     public TaskAdapter mTaskAdapter;
     private ListView mListView;
-    public final static String EXTRA_MESSAGE = "com.beeminder.gtbee.TITLE_MESSAGE";
+
     private Cursor cursor;
 
     public TaskFragment() {
@@ -44,13 +44,10 @@ public class TaskFragment extends Fragment implements LoaderManager.LoaderCallba
 
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int position, long l) {
-                Log.v("TaskFragment", "id: " + Integer.toString(view.getId()));
                 Log.v("TaskFragment", "l: " + Long.toString(l));
 
-                TextView textView = (TextView) view.findViewById(R.id.list_item_title);
-                String title = textView.getText().toString();
                 Intent intent = new Intent(getActivity(), TaskDetail.class);
-                intent.putExtra(EXTRA_MESSAGE, title);
+                intent.putExtra(TaskDetail.KEY_ID, l);
                 startActivity(intent);
             }
         });

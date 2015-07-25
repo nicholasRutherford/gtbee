@@ -2,6 +2,7 @@ package com.beeminder.gtbee;
 
 import android.app.Activity;
 import android.content.SharedPreferences;
+import android.database.Cursor;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
@@ -12,6 +13,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.beeminder.gtbee.auth.OauthActivity;
+import com.beeminder.gtbee.data.Contract;
 
 
 /**
@@ -37,13 +39,18 @@ public class NewTaskFragment extends Fragment{
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_new_task, container, false);
-        Long time_mili = mCallback.getDate();
-        String oldName = ((NewTask) getActivity()).oldTaskName;
-        int retryCount = ((NewTask) getActivity()).retryNumber;
+        long time_mili = mCallback.getDate();
+        long oldID = ((NewTask) getActivity()).mOldTaskID;
+        int retryCount = ((NewTask) getActivity()).mRetryNumber;
 
-        EditText editText = (EditText) view.findViewById(R.id.new_task_title);
-        editText.setText(oldName);
+        if (oldID != -1l){
+            Cursor cur = getActivity().getContentResolver().query(Contract.ACTIVE_TASKS_URI, null,
+                    Contract.KEY_ID + "=" + oldID, null, null);
+            String title = cur.getString(cur.getColumnIndex(Contract.KEY_TITLE));
+            EditText editText = (EditText) view.findViewById(R.id.new_task_title);
+            editText.setText(title);
 
+        }
         TextView textView = (TextView) view.findViewById(R.id.new_task_due_date);
         textView.setText(new Utility().niceDateTime(time_mili));
 

@@ -22,7 +22,8 @@ public class DbHelper extends SQLiteOpenHelper {
             Contract.KEY_DUE_DATE + " INTEGER NOT NULL, " +
             Contract.KEY_ADDED_DATE + " INTEGER NOT NULL, " +
             Contract.KEY_PENALTY + " INTEGER NOT NULL, " +
-            Contract.KEY_DESCRIPTION + " TEXT NOT NULL" +
+            Contract.KEY_DESCRIPTION + " TEXT NOT NULL," +
+            Contract.KEY_RETRY_NUMBER + " INTEGER NOT NULL " +
             ");";
 
     // OLD_TASKS create statement
@@ -43,7 +44,7 @@ public class DbHelper extends SQLiteOpenHelper {
             Contract.KEY_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
             Contract.KEY_TITLE + " TEXT NOT NULL, " +
             Contract.KEY_PENALTY + " INTEGER NOT NULL, " +
-            Contract.KEY_PAYMENT_STATUS + " TEXT NOT NULL, " +
+            Contract.KEY_PAYED + " INTEGER NOT NULL, " +
             Contract.KEY_DUE_DATE + " INTEGER NOT NULL " +
             ");";
 

@@ -23,6 +23,25 @@
         android:orientation="vertical">
 
         <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="48dp"
+            android:orientation="horizontal"
+            android:onClick="startFailed">
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/ic_settings_black_24dp"/>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:paddingLeft="32dp"
+                android:text="Failed"/>
+        </LinearLayout>
+        
+
+        <LinearLayout
             android:layout_marginTop="20dp"
             android:layout_width="wrap_content"
             android:layout_height="48dp"

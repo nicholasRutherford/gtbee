@@ -3,10 +3,9 @@ package com.beeminder.gtbee.services;
 import android.app.IntentService;
 import android.content.ContentValues;
 import android.content.Intent;
-import android.database.sqlite.SQLiteDatabase;
 
-import com.beeminder.gtbee.data.PaymentRequestDbHelper;
-import com.beeminder.gtbee.data.TaskDbHelper;
+
+import com.beeminder.gtbee.data.Contract;
 
 import java.util.Calendar;
 
@@ -24,19 +23,17 @@ public class OverdueService extends IntentService {
 
         String title =  intent.getStringExtra(TASK_TITLE);
         int paymentAmount =  intent.getIntExtra(PAYMENT_AMOUNT, 0);
-        String paymentStatus = PaymentRequestDbHelper.NOT_CHARGED;
+        int payed = 0;
         Long dueDate = Calendar.getInstance().getTimeInMillis();
 
-        SQLiteDatabase db = new PaymentRequestDbHelper(this).getWritableDatabase();
 
         ContentValues values = new ContentValues();
-        values.put(PaymentRequestDbHelper.COLUMN_TITLE, title);
-        values.put(PaymentRequestDbHelper.COLUMN_PAYMENT_AMOUNT, paymentAmount);
-        values.put(PaymentRequestDbHelper.COLUMN_PAYMENT_STATUS, paymentStatus);
-        values.put(PaymentRequestDbHelper.COLUMN_DUE_DATE, dueDate);
+        values.put(Contract.KEY_TITLE, title);
+        values.put(Contract.KEY_PENALTY, paymentAmount);
+        values.put(Contract.KEY_PAYED, payed);
+        values.put(Contract.KEY_DUE_DATE, dueDate);
 
-        db.insert(TaskDbHelper.TABLE_NAME, null, values);
-        db.close();
+        getContentResolver().insert(Contract.FAILED_TASKS_URI,values);
 
         Intent paymentIntent = new Intent(this, PaymentService.class);
         startService(paymentIntent);

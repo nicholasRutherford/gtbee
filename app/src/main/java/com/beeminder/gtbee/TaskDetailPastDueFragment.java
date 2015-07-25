@@ -12,9 +12,7 @@ import android.view.ViewGroup;
  */
 public class TaskDetailPastDueFragment extends Fragment {
 
-
     public TaskDetailPastDueFragment() {}
-
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -22,6 +20,4 @@ public class TaskDetailPastDueFragment extends Fragment {
         // Inflate the layout for this fragment
         return inflater.inflate(R.layout.fragment_task_detail_past_due, container, false);
     }
-
-
 }
