@@ -13,9 +13,9 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.v7.app.ActionBarActivity;
-import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -29,11 +29,10 @@ import android.widget.ToggleButton;
 
 import com.beeminder.gtbee.auth.OauthActivity;
 import com.beeminder.gtbee.data.Contract;
-import com.beeminder.gtbee.data.TaskDbHelper;
 import com.beeminder.gtbee.data.DbHelper;
+import com.beeminder.gtbee.data.TaskDbHelper;
 import com.beeminder.gtbee.integrations.BeeminederIntActivity;
 import com.beeminder.gtbee.services.BeeminederIntSendDataService;
-import com.beeminder.gtbee.services.PaymentService;
 import com.beeminder.gtbee.services.ReminderService;
 
 import java.util.Calendar;

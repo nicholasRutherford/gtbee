@@ -15,12 +15,7 @@ import android.webkit.WebViewClient;
 import com.beeminder.gtbee.R;
 
 import org.scribe.builder.ServiceBuilder;
-import org.scribe.model.OAuthRequest;
-import org.scribe.model.Response;
-import org.scribe.model.Verb;
 import org.scribe.oauth.OAuthService;
-
-import java.util.prefs.Preferences;
 
 /* Uses Scribe, but it turned out to be completely uneeded. Can switch to a simpler
     HTTP request function if you like.

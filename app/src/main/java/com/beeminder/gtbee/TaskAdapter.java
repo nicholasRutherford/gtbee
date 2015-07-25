@@ -9,7 +9,6 @@ import android.view.ViewGroup;
 import android.widget.CursorAdapter;
 import android.widget.TextView;
 
-
 import com.beeminder.gtbee.data.TaskDbHelper;
 
 import java.util.Calendar;

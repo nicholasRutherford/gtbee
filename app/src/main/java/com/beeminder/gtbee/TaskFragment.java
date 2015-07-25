@@ -2,9 +2,8 @@ package com.beeminder.gtbee;
 
 import android.content.Intent;
 import android.database.Cursor;
-import android.net.Uri;
-import android.support.v4.app.Fragment;
 import android.os.Bundle;
+import android.support.v4.app.Fragment;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
@@ -16,10 +15,7 @@ import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.TextView;
 
-
-import com.beeminder.gtbee.data.ContentProvider;
 import com.beeminder.gtbee.data.Contract;
-import com.beeminder.gtbee.data.TaskDbHelper;
 
 
 /**
@@ -31,8 +27,6 @@ public class TaskFragment extends Fragment implements LoaderManager.LoaderCallba
     private ListView mListView;
     public final static String EXTRA_MESSAGE = "com.beeminder.gtbee.TITLE_MESSAGE";
     private Cursor cursor;
-
-    private static final int TASK_LOADER = 0;
 
     public TaskFragment() {
     }

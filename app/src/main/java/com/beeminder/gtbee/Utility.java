@@ -8,8 +8,6 @@ import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 
-import com.beeminder.gtbee.data.TaskDbHelper;
-import com.beeminder.gtbee.services.PaymentService;
 import com.beeminder.gtbee.services.ReminderService;
 
 import java.util.Calendar;

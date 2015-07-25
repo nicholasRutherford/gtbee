@@ -1,8 +1,8 @@
 package com.beeminder.gtbee.auth;
 
 import org.scribe.builder.api.DefaultApi20;
-import org.scribe.model.*;
-import org.scribe.utils.*;
+import org.scribe.model.OAuthConfig;
+import org.scribe.utils.OAuthEncoder;
 
 public class BeeminderApi extends DefaultApi20
 {

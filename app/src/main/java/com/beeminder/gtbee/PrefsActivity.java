@@ -1,9 +1,7 @@
 package com.beeminder.gtbee;
 
-import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
-import android.view.Menu;
-import android.view.MenuItem;
+import android.support.v7.app.ActionBarActivity;
 
 
 public class PrefsActivity extends ActionBarActivity {
