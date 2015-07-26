@@ -26,26 +26,47 @@
             android:layout_width="match_parent"
             android:layout_height="48dp"
             android:orientation="horizontal"
+            android:layout_marginTop="20dp"
             android:onClick="startFailed">
 
             <ImageView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:src="@drawable/ic_settings_black_24dp"/>
+                android:src="@drawable/ic_cancel_black_24dp"/>
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:paddingLeft="32dp"
-                android:text="Failed"/>
+                android:text="@string/side_bar_faild_tasks_name"/>
         </LinearLayout>
-        
 
         <LinearLayout
-            android:layout_marginTop="20dp"
+
+        android:layout_width="wrap_content"
+        android:layout_height="48dp"
+        android:orientation="horizontal"
+        android:onClick="startBeemindIntegration">
+
+        <ImageView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:src="@drawable/ic_done_all_black_24dp"/>
+
+        <TextView
+            android:paddingLeft="28dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Completed Tasks"/>
+        </LinearLayout>
+
+
+        <LinearLayout
+
             android:layout_width="wrap_content"
             android:layout_height="48dp"
             android:orientation="horizontal"
+            android:layout_marginTop="20dp"
             android:onClick="startBeemindIntegration">
 
             <ImageView
@@ -79,6 +100,11 @@
                 android:text="Settings"/>
 
         </LinearLayout>
+
+        <TextView
+            android:id="@+id/app_version"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
 
 
     </LinearLayout>

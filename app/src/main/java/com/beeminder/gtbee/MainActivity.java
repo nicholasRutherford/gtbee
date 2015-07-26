@@ -11,6 +11,7 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.TextView;
 
 import com.beeminder.gtbee.auth.BeeminderAuthInfo;
 import com.beeminder.gtbee.auth.OauthActivity;
@@ -39,6 +40,10 @@ public class MainActivity extends ActionBarActivity {
             startActivity(intent);
 
         }
+
+        String versionName = BuildConfig.VERSION_NAME;
+        TextView textView = (TextView) findViewById(R.id.app_version);
+        textView.setText("Version: " + versionName);
 
         mTitle = mDrawerTitle = getTitle();
         mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
