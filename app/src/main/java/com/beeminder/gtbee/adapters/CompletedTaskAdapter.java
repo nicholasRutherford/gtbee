@@ -2,7 +2,6 @@ package com.beeminder.gtbee.adapters;
 
 import android.content.Context;
 import android.database.Cursor;
-import android.graphics.Color;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -10,17 +9,14 @@ import android.widget.CursorAdapter;
 import android.widget.TextView;
 
 import com.beeminder.gtbee.R;
-import com.beeminder.gtbee.Utility;
 import com.beeminder.gtbee.data.Contract;
-
-import java.util.Calendar;
 
 /**
  * Created by nick on 25/07/15.
  */
-public class FailedTaskAdapter extends CursorAdapter {
+public class CompletedTaskAdapter extends CursorAdapter {
 
-    public FailedTaskAdapter(Context context, Cursor c, int flags) {
+    public CompletedTaskAdapter(Context context, Cursor c, int flags) {
         super(context, c, flags);
     }
 
@@ -34,7 +30,6 @@ public class FailedTaskAdapter extends CursorAdapter {
             mTitle = (TextView) view.findViewById(R.id.failed_task_title);
             mPaymentStatus = (TextView) view.findViewById(R.id.failed_task_payment_status);
             mPaymentAmount = (TextView) view.findViewById(R.id.failed_task_paymend_amount);
-
         }
     }
 
@@ -67,4 +62,3 @@ public class FailedTaskAdapter extends CursorAdapter {
         viewHolder.mPaymentStatus.setText(paymentStatus);
 
     }
-}

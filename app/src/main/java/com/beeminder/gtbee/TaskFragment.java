@@ -13,8 +13,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ListView;
-import android.widget.TextView;
 
+import com.beeminder.gtbee.adapters.TaskAdapter;
 import com.beeminder.gtbee.data.Contract;
 
 

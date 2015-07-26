@@ -27,7 +27,7 @@ public class DbHelper extends SQLiteOpenHelper {
             ");";
 
     // OLD_TASKS create statement
-    private static final String CREATE_OLD_TASKS = "CREATE TABLE " + Contract.TABLE_OLD_TASKS +
+    private static final String CREATE_COMPLETED_TASKS = "CREATE TABLE " + Contract.TABLE_COMPLETED_TASKS +
             " (" +
             Contract.KEY_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
             Contract.KEY_TITLE + " TEXT NOT NULL, " +
@@ -39,7 +39,7 @@ public class DbHelper extends SQLiteOpenHelper {
             ");";
 
     // NETWORK_PENDING_PAYMENT  create statement
-    private static final String CREATE_NETWORK_PENDING_PAYMENT =  "CREATE TABLE " + Contract.TABLE_NETWORK_PENDING_PAYMENT +
+    private static final String CREATE_FAILED_TASKS =  "CREATE TABLE " + Contract.TABLE_NETWORK_PENDING_PAYMENT +
             " (" +
             Contract.KEY_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
             Contract.KEY_TITLE + " TEXT NOT NULL, " +
@@ -68,8 +68,8 @@ public class DbHelper extends SQLiteOpenHelper {
     public void onCreate(SQLiteDatabase db) {
         // Create required tables
         db.execSQL(CREATE_ACTIVE_TASKS);
-        db.execSQL(CREATE_OLD_TASKS);
-        db.execSQL(CREATE_NETWORK_PENDING_PAYMENT);
+        db.execSQL(CREATE_COMPLETED_TASKS);
+        db.execSQL(CREATE_FAILED_TASKS);
         db.execSQL(CREATE_NETWORK_PENDING_BEEMINDER_INT);
     }
 
@@ -77,7 +77,7 @@ public class DbHelper extends SQLiteOpenHelper {
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
         // on upgrade drop older tables
         db.execSQL("DROP TABLE IF EXISTS " + Contract.TABLE_ACTIVE_TASKS);
-        db.execSQL("DROP TABLE IF EXISTS " + Contract.TABLE_OLD_TASKS);
+        db.execSQL("DROP TABLE IF EXISTS " + Contract.TABLE_COMPLETED_TASKS);
         db.execSQL("DROP TABLE IF EXISTS " + Contract.TABLE_NETWORK_PENDING_PAYMENT);
         db.execSQL("DROP TABLE IF EXISTS " + Contract.TABLE_NETWORK_PENDING_BEEMINDER_INT);
 

@@ -1,4 +1,4 @@
-package com.beeminder.gtbee;
+package com.beeminder.gtbee.adapters;
 
 import android.content.Context;
 import android.database.Cursor;
@@ -9,6 +9,8 @@ import android.view.ViewGroup;
 import android.widget.CursorAdapter;
 import android.widget.TextView;
 
+import com.beeminder.gtbee.R;
+import com.beeminder.gtbee.Utility;
 import com.beeminder.gtbee.data.Contract;
 
 import java.util.Calendar;
