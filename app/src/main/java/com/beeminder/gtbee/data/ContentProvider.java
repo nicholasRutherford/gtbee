@@ -222,17 +222,14 @@ public class ContentProvider extends android.content.ContentProvider {
             case ACTIVE_TASKS:
                 break;
             case COMPLETED_TASKS:
-                Log.v(LOG_TAG, "Old tasks");
                 break;
             case NETWORK_PENDING:
-                Log.v(LOG_TAG, "Network pending");
                 break;
             case FAILED_TASKS:
-                Log.v(LOG_TAG, "Update: Network pending payments");
                 rowsUpdated = db.update(Contract.TABLE_FAILED_TASKS, values, selection, selectionArgs);
                 break;
             case NETWORK_PENDING_BEEMINDER_INT:
-                Log.v(LOG_TAG, "Network prending beeminder int");
+                rowsUpdated = db.update(Contract.TABLE_NETWORK_PENDING_BEEMINDER_INT, values, selection, selectionArgs);
                 break;
             default:
                 Log.e(LOG_TAG, "Did not match any URIs for: " + uri.toString());

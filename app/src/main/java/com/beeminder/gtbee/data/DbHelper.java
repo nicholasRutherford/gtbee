@@ -53,7 +53,8 @@ public class DbHelper extends SQLiteOpenHelper {
             " (" +
             Contract.KEY_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
             Contract.KEY_TITLE + " TEXT NOT NULL, " +
-            Contract.KEY_SENT_STATUS + " TEXT NOT NULL" +
+            Contract.KEY_TASK_ID + " INTEGER NOT NULL, " +
+            Contract.KEY_SENT_STATUS + " INTEGER NOT NULL" +
             ");";
 
 

@@ -24,6 +24,9 @@ public class NetworkStateReceiver extends BroadcastReceiver {
             if (ni != null && ni.isConnectedOrConnecting()){
                 Intent paymentIntent = new Intent(context, PaymentService.class);
                 context.startService(paymentIntent);
+
+                Intent beeminederIntIntegent = new Intent(context, BeeminederIntSendDataService.class);
+                context.startService(beeminederIntIntegent);
             }
         }
 

@@ -8,7 +8,7 @@ import android.net.Uri;
  * Created by nick on 17/07/15.
  */
 public class Contract {
-    public static final int DATABASE_VERSION = 7;
+    public static final int DATABASE_VERSION = 8;
     public static final String DATABASE_NAME = "GTBeeDB";
 
     public static final String CONTENT_AUTHORITY = "com.beeminder.gtbee.provider";
@@ -48,6 +48,7 @@ public class Contract {
 
     // NETWORK_PENDING_BEEMINDER_INT column names
     public static final String KEY_SENT_STATUS = "sent_status";
+    public static final String KEY_TASK_ID = "task_id";
 
     // ALARMS column names
     public static final String KEY_ALARM_TYPE = "type";

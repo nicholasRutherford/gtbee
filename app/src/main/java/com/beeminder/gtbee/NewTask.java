@@ -323,12 +323,17 @@ public class NewTask extends ActionBarActivity implements TimePickerDialog.OnTim
         String beeminderGoal = settings.getString(BeeminederIntActivity.BEEMINDER_GOAL, null);
 
         if (!(beeminderGoal == null)){
-            Intent intentSendData = new Intent(this, BeeminederIntSendDataService.class);
-            intentSendData.putExtra(BeeminederIntSendDataService.TASK_TITLE, title);
-            intentSendData.putExtra(BeeminederIntSendDataService.TASK_ID, base_id);
-            intentSendData.putExtra(BeeminederIntSendDataService.ATTEMPT_NUMBER, 0);
+            int sentStatus = 0; // Not sent
 
-            startService(intentSendData);
+            ContentValues values = new ContentValues();
+            values.put(Contract.KEY_TITLE, title);
+            values.put(Contract.KEY_TASK_ID, base_id);
+            values.put(Contract.KEY_SENT_STATUS, 0);
+
+            getContentResolver().insert(Contract.NETWORK_PENDING_BEEMINDER_INT_URI, values);
+
+            Intent intentSendBeeminederInt = new Intent(this, BeeminederIntSendDataService.class);
+            startService(intentSendBeeminederInt);
             Log.v("NewTask", "Send datapoint to beeminder!");
         }
 
