@@ -197,18 +197,4 @@ public class Utility {
         }
 
     }
-
-    public void deleteTaskFromTitle(String title, Context context){
-
-        Cursor cur = context.getContentResolver().query(Contract.ACTIVE_TASKS_URI, null,
-                Contract.KEY_TITLE + "=\"" + title + "\"", null, null);
-        cur.moveToFirst();
-        int base_id = cur.getInt(0);
-        context.getContentResolver().delete(Contract.ACTIVE_TASKS_URI, Contract.KEY_ID + "=" + base_id, null);
-    }
-
-
-
-
-
 }

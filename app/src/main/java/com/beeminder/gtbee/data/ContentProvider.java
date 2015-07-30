@@ -12,6 +12,7 @@ import android.database.sqlite.SQLiteDatabase;
 import android.net.Uri;
 import android.util.Log;
 
+import com.beeminder.gtbee.services.OverdueService;
 import com.beeminder.gtbee.services.ReminderService;
 
 /**
@@ -21,18 +22,20 @@ import com.beeminder.gtbee.services.ReminderService;
 public class ContentProvider extends android.content.ContentProvider {
     public final String LOG_TAG = this.getClass().getSimpleName();
     private static final int ACTIVE_TASKS = 1;
-    private static final int OLD_TASKS = 2;
-    private static final int NETWORK_PENDING = 3;
-    private static final int NETWORK_PENDING_PAYMENT = 4;
-    private static final int NETWORK_PENDING_BEEMINDER_INT = 5;
+    private static final int ACTIVE_TASK = 2;
+    private static final int COMPLETED_TASKS = 3;
+    private static final int NETWORK_PENDING = 4;
+    private static final int FAILED_TASKS = 5;
+    private static final int NETWORK_PENDING_BEEMINDER_INT = 6;
 
     private static final UriMatcher sUriMatcher = new UriMatcher(UriMatcher.NO_MATCH);
 
     static {
         sUriMatcher.addURI(Contract.CONTENT_AUTHORITY, Contract.PATH_ACTIVE_TASKS, ACTIVE_TASKS);
-        sUriMatcher.addURI(Contract.CONTENT_AUTHORITY, Contract.PATH_OLD_TASKS, OLD_TASKS);
+        sUriMatcher.addURI(Contract.CONTENT_AUTHORITY, Contract.PATH_ACTIVE_TASKS + "/#", ACTIVE_TASK);
+        sUriMatcher.addURI(Contract.CONTENT_AUTHORITY, Contract.PATH_COMPLETED_TASKS, COMPLETED_TASKS);
         sUriMatcher.addURI(Contract.CONTENT_AUTHORITY, "network_pending", NETWORK_PENDING);
-        sUriMatcher.addURI(Contract.CONTENT_AUTHORITY, Contract.PATH_FAILED_TASKS, NETWORK_PENDING_PAYMENT);
+        sUriMatcher.addURI(Contract.CONTENT_AUTHORITY, Contract.PATH_FAILED_TASKS, FAILED_TASKS);
         sUriMatcher.addURI(Contract.CONTENT_AUTHORITY, Contract.PATH_NETWORK_PENDING_BEEMINDER_INT, NETWORK_PENDING_BEEMINDER_INT);
     }
 
@@ -59,21 +62,25 @@ public class ContentProvider extends android.content.ContentProvider {
 
         switch (sUriMatcher.match(uri)) {
             case ACTIVE_TASKS:
-                Log.v(LOG_TAG, "Active_Task");
                 cursor = db.query(Contract.TABLE_ACTIVE_TASKS, projection, selection, selectionArgs, null, null, sortOrder);
                 break;
-            case OLD_TASKS:
-                Log.v(LOG_TAG, "Old tasks");
+            case ACTIVE_TASK:
+                if (selection == null){
+                    selection = Contract.KEY_ID + "=" + uri.getLastPathSegment();
+                } else {
+                    selection = selection + Contract.KEY_ID + "=" + uri.getLastPathSegment();
+                }
+
+                cursor = db.query(Contract.TABLE_ACTIVE_TASKS, projection, selection, selectionArgs, null, null, sortOrder);
+                break;
+            case COMPLETED_TASKS:
                 break;
             case NETWORK_PENDING:
-                Log.v(LOG_TAG, "Network pending");
                 break;
-            case NETWORK_PENDING_PAYMENT:
-                Log.v(LOG_TAG, "Network pending payments");
-                cursor = db.query(Contract.TABLE_NETWORK_PENDING_PAYMENT, projection, selection, selectionArgs, null, null, sortOrder);
+            case FAILED_TASKS:
+                cursor = db.query(Contract.TABLE_FAILED_TASKS, projection, selection, selectionArgs, null, null, sortOrder);
                 break;
             case NETWORK_PENDING_BEEMINDER_INT:
-                Log.v(LOG_TAG, "Network prending beeminder int");
                 break;
             default:
                 Log.e(LOG_TAG, "Did not match any URIs for: " + uri.toString());
@@ -88,17 +95,13 @@ public class ContentProvider extends android.content.ContentProvider {
         switch (sUriMatcher.match(uri)) {
             case ACTIVE_TASKS:
                 return Contract.CONTENT_TYPE;
-            case OLD_TASKS:
-                Log.v(LOG_TAG, "Old tasks");
+            case COMPLETED_TASKS:
                 break;
             case NETWORK_PENDING:
-                Log.v(LOG_TAG, "Network pending");
                 break;
-            case NETWORK_PENDING_PAYMENT:
-                Log.v(LOG_TAG, "Network pending payments");
+            case FAILED_TASKS:
                 break;
             case NETWORK_PENDING_BEEMINDER_INT:
-                Log.v(LOG_TAG, "Network prending beeminder int");
                 break;
             default:
                 Log.e(LOG_TAG, "Did not match any URIs for: " + uri.toString());
@@ -121,17 +124,14 @@ public class ContentProvider extends android.content.ContentProvider {
                 }
                 break;
 
-            case OLD_TASKS:
-                Log.v(LOG_TAG, "Old tasks");
+            case COMPLETED_TASKS:
                 break;
 
             case NETWORK_PENDING:
-                Log.v(LOG_TAG, "Network pending");
                 break;
 
-            case NETWORK_PENDING_PAYMENT:
-                Log.v(LOG_TAG, "Network pending payments");
-                id = db.insert(Contract.TABLE_NETWORK_PENDING_PAYMENT, null, values);
+            case FAILED_TASKS:
+                id = db.insert(Contract.TABLE_FAILED_TASKS, null, values);
                 if (id > 0 ){
                     returnUri = Contract.buildFailedTaskUri(id);
                 } else {
@@ -140,7 +140,6 @@ public class ContentProvider extends android.content.ContentProvider {
                 break;
 
             case NETWORK_PENDING_BEEMINDER_INT:
-                Log.v(LOG_TAG, "Network prending beeminder int");
                 break;
 
             default:
@@ -149,10 +148,6 @@ public class ContentProvider extends android.content.ContentProvider {
         }
 
         getContext().getContentResolver().notifyChange(uri, null);
-        Log.v(LOG_TAG, "Notified: " + uri.toString());
-        if (returnUri != null){
-            Log.v(LOG_TAG, "Returned URI: " + returnUri.toString());
-        }
         // Return a content URI for the newly-inserted row
         return returnUri;
     }
@@ -189,21 +184,22 @@ public class ContentProvider extends android.content.ContentProvider {
                 PendingIntent pendingIntentDay = PendingIntent.getService(context, day_id, intentDay, PendingIntent.FLAG_UPDATE_CURRENT);
                 alarmManager.cancel(pendingIntentDay);
 
-                // TODO Payment alarm
-                // TODO Move to OLD_TASKS
+                // Remove overdue check
+                Intent intentPayment = new Intent(context, OverdueService.class);
+                intentPayment.putExtra(OverdueService.TASK_ID, base_id);
+                PendingIntent pendingIntentPayment = PendingIntent.getService(context, pay_id, intentPayment, PendingIntent.FLAG_UPDATE_CURRENT);
+                alarmManager.cancel(pendingIntentPayment);
+
                 rowsDeleted = db.delete(Contract.TABLE_ACTIVE_TASKS, selection, selectionArgs);
                 break;
-            case OLD_TASKS:
-                Log.v(LOG_TAG, "Old tasks");
+
+            case COMPLETED_TASKS:
                 break;
             case NETWORK_PENDING:
-                Log.v(LOG_TAG, "Network pending");
                 break;
-            case NETWORK_PENDING_PAYMENT:
-                Log.v(LOG_TAG, "Network pending payments");
+            case FAILED_TASKS:
                 break;
             case NETWORK_PENDING_BEEMINDER_INT:
-                Log.v(LOG_TAG, "Network prending beeminder int");
                 break;
             default:
                 Log.e(LOG_TAG, "Did not match any URIs for: " + uri.toString());
@@ -225,21 +221,24 @@ public class ContentProvider extends android.content.ContentProvider {
 
             case ACTIVE_TASKS:
                 break;
-            case OLD_TASKS:
+            case COMPLETED_TASKS:
                 Log.v(LOG_TAG, "Old tasks");
                 break;
             case NETWORK_PENDING:
                 Log.v(LOG_TAG, "Network pending");
                 break;
-            case NETWORK_PENDING_PAYMENT:
+            case FAILED_TASKS:
                 Log.v(LOG_TAG, "Update: Network pending payments");
-                rowsUpdated = db.update(Contract.TABLE_NETWORK_PENDING_PAYMENT, values, selection, selectionArgs);
+                rowsUpdated = db.update(Contract.TABLE_FAILED_TASKS, values, selection, selectionArgs);
                 break;
             case NETWORK_PENDING_BEEMINDER_INT:
                 Log.v(LOG_TAG, "Network prending beeminder int");
                 break;
             default:
                 Log.e(LOG_TAG, "Did not match any URIs for: " + uri.toString());
+        }
+        if (rowsUpdated != 0){
+            getContext().getContentResolver().notifyChange(uri, null);
         }
 
         //Return the number of rows updated

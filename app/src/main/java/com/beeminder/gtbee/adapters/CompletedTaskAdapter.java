@@ -54,11 +54,12 @@ public class CompletedTaskAdapter extends CursorAdapter {
 
         int payed = cursor.getInt(cursor.getColumnIndex(Contract.KEY_PAYED));
         String paymentStatus;
-        if (payed == 0){
+        if (payed == 0) {
             paymentStatus = "Payment Pending";
-        } else  {
+        } else {
             paymentStatus = "Payed";
         }
         viewHolder.mPaymentStatus.setText(paymentStatus);
 
     }
+}

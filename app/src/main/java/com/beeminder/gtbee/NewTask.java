@@ -11,6 +11,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.database.Cursor;
+import android.net.Uri;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.v7.app.ActionBarActivity;
@@ -232,7 +233,6 @@ public class NewTask extends ActionBarActivity implements TimePickerDialog.OnTim
 
         // Creating a new task from an overdue task, so remove the old task
         if (mRetryNumber > 0){
-            //TODO Delete with id instead of taskName
             getContentResolver().delete(Contract.ACTIVE_TASKS_URI, Contract.KEY_ID + "=" + mOldTaskID, null);
         }
 
@@ -244,15 +244,18 @@ public class NewTask extends ActionBarActivity implements TimePickerDialog.OnTim
         values.put(Contract.KEY_DESCRIPTION, "");
         values.put(Contract.KEY_RETRY_NUMBER, mRetryNumber);
 
-        getContentResolver().insert(Contract.ACTIVE_TASKS_URI, values);
+        Uri insertedUri = getContentResolver().insert(Contract.ACTIVE_TASKS_URI, values);
+        Cursor cur = getContentResolver().query(insertedUri, null, null, null, null);
+        cur.moveToFirst();
+        int id = cur.getInt(cur.getColumnIndex(Contract.KEY_ID));
 
 
-        setNotifications(title, mdate, mPenalty);
+        setNotifications(id, mPenalty);
         this.finish();
 
     }
 
-    private void setNotifications(String title, Long date, int penalty){
+    private void setNotifications(int id, int penalty){
         int base_id;
         int hour_id;
         int day_id;
@@ -263,11 +266,11 @@ public class NewTask extends ActionBarActivity implements TimePickerDialog.OnTim
 
         Cursor cur = getContentResolver().query(Contract.ACTIVE_TASKS_URI, // Table
                 new String[] {Contract.KEY_ID}, // Column
-                //TODO switch to ID
-                Contract.KEY_TITLE + "=\"" + title + "\"", // Where row title is given title
+                Contract.KEY_ID + "=" + id , // Where row title is given title
                 null,
                 null);
         cur.moveToFirst();
+        String title = cur.getString(cur.getColumnIndex(Contract.KEY_TITLE));
         base_id = cur.getInt(0);
         hour_id = base_id * 100 + 60; // 60 min in an hour
         day_id = base_id * 100 + 24; // 24 hours in a day
@@ -309,10 +312,7 @@ public class NewTask extends ActionBarActivity implements TimePickerDialog.OnTim
         // Set payment alarm
         if (penalty > 0 ) {
             Intent intentPayment = new Intent(this, OverdueService.class);
-            intentPayment.putExtra(OverdueService.TASK_TITLE, title);
             intentPayment.putExtra(OverdueService.TASK_ID, base_id);
-            intentPayment.putExtra(OverdueService.ATTEMPT_NUMBER, 0);
-            intentPayment.putExtra(OverdueService.PAYMENT_AMOUNT, penalty);
             PendingIntent pendingIntentPayment = PendingIntent.getService(this, pay_id, intentPayment, PendingIntent.FLAG_UPDATE_CURRENT);
 
             alarmManager.set(AlarmManager.RTC_WAKEUP, mdate, pendingIntentPayment);
@@ -323,7 +323,6 @@ public class NewTask extends ActionBarActivity implements TimePickerDialog.OnTim
         String beeminderGoal = settings.getString(BeeminederIntActivity.BEEMINDER_GOAL, null);
 
         if (!(beeminderGoal == null)){
-            //TODO
             Intent intentSendData = new Intent(this, BeeminederIntSendDataService.class);
             intentSendData.putExtra(BeeminederIntSendDataService.TASK_TITLE, title);
             intentSendData.putExtra(BeeminederIntSendDataService.TASK_ID, base_id);

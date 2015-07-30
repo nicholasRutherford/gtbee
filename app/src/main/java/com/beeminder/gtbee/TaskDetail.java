@@ -77,7 +77,6 @@ public class TaskDetail extends ActionBarActivity {
     }
 
     public void deleteTask(View view){
-        // TODO delete from ID instead of title
         getContentResolver().delete(Contract.ACTIVE_TASKS_URI, Contract.KEY_ID + "=" + mTaskId, null);
         finish();
     }

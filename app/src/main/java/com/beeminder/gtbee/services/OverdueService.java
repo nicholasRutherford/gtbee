@@ -3,6 +3,7 @@ package com.beeminder.gtbee.services;
 import android.app.IntentService;
 import android.content.ContentValues;
 import android.content.Intent;
+import android.database.Cursor;
 
 
 import com.beeminder.gtbee.data.Contract;
@@ -11,31 +12,36 @@ import java.util.Calendar;
 
 
 public class OverdueService extends IntentService {
-    public static final String TASK_TITLE = "com.beeminder.gtbee.task_title";
     public static final String TASK_ID = "com.beeminder.gtbee.task_id";
-    public static final String ATTEMPT_NUMBER = "com.beeminder.gtbee.attempt_number";
-    public static final String PAYMENT_AMOUNT = "com.beeminder.gtbee.payment_amount";
 
     public OverdueService(){ super("OverdueService");}
 
     @Override
     protected void onHandleIntent(Intent intent) {
+        int id = intent.getIntExtra(TASK_ID, -1);
 
-        String title =  intent.getStringExtra(TASK_TITLE);
-        int paymentAmount =  intent.getIntExtra(PAYMENT_AMOUNT, 0);
-        int payed = 0;
-        Long dueDate = Calendar.getInstance().getTimeInMillis();
+        Cursor cur = getContentResolver().query(Contract.ACTIVE_TASKS_URI, null,
+                Contract.KEY_ID + "=" +id , null, null);
 
 
-        ContentValues values = new ContentValues();
-        values.put(Contract.KEY_TITLE, title);
-        values.put(Contract.KEY_PENALTY, paymentAmount);
-        values.put(Contract.KEY_PAYED, payed);
-        values.put(Contract.KEY_DUE_DATE, dueDate);
+        if (cur.getCount() == 1) {
+            cur.moveToFirst();
 
-        getContentResolver().insert(Contract.FAILED_TASKS_URI,values);
+            String title = cur.getString(cur.getColumnIndex(Contract.KEY_TITLE));
+            int paymentAmount = cur.getInt(cur.getColumnIndex(Contract.KEY_PENALTY));
+            Long dueDate = cur.getLong(cur.getColumnIndex(Contract.KEY_DUE_DATE));
+            int payed = 0; // Set payment status to not payed
 
-        Intent paymentIntent = new Intent(this, PaymentService.class);
-        startService(paymentIntent);
+            ContentValues values = new ContentValues();
+            values.put(Contract.KEY_TITLE, title);
+            values.put(Contract.KEY_PENALTY, paymentAmount);
+            values.put(Contract.KEY_PAYED, payed);
+            values.put(Contract.KEY_DUE_DATE, dueDate);
+
+            getContentResolver().insert(Contract.FAILED_TASKS_URI, values);
+
+            Intent paymentIntent = new Intent(this, PaymentService.class);
+            startService(paymentIntent);
+        }
     }
 }

@@ -84,7 +84,6 @@ public class TaskDetailFragment extends Fragment {
             }
 
             public void onFinish(){
-                //TODO change fragment to past due one
                 secTimer.setText("0");
 
             }

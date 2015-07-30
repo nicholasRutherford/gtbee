@@ -84,7 +84,6 @@ public class BeeminederIntActivity extends ActionBarActivity {
         boolean isConnected = activeNetwork != null && activeNetwork.isConnectedOrConnecting();
         if (!isConnected){
             Log.v("PaymentService", "No connection, can't connect to beeminder");
-            //todo handle no internet
             return;
         }
 
