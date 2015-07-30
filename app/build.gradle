@@ -8,8 +8,8 @@ android {
         applicationId "com.beeminder.gtbee"
         minSdkVersion 16
         targetSdkVersion 22
-        versionCode 5
-        versionName "0.5"
+        versionCode 6
+        versionName "0.6"
     }
     buildTypes {
         release {
