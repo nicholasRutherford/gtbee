@@ -12,6 +12,7 @@ import android.database.sqlite.SQLiteDatabase;
 import android.net.Uri;
 import android.util.Log;
 
+import com.beeminder.gtbee.Utility;
 import com.beeminder.gtbee.services.OverdueService;
 import com.beeminder.gtbee.services.ReminderService;
 
@@ -27,6 +28,7 @@ public class ContentProvider extends android.content.ContentProvider {
     private static final int NETWORK_PENDING = 4;
     private static final int FAILED_TASKS = 5;
     private static final int NETWORK_PENDING_BEEMINDER_INT = 6;
+    private static final int ALARMS = 7;
 
     private static final UriMatcher sUriMatcher = new UriMatcher(UriMatcher.NO_MATCH);
 
@@ -37,6 +39,7 @@ public class ContentProvider extends android.content.ContentProvider {
         sUriMatcher.addURI(Contract.CONTENT_AUTHORITY, "network_pending", NETWORK_PENDING);
         sUriMatcher.addURI(Contract.CONTENT_AUTHORITY, Contract.PATH_FAILED_TASKS, FAILED_TASKS);
         sUriMatcher.addURI(Contract.CONTENT_AUTHORITY, Contract.PATH_NETWORK_PENDING_BEEMINDER_INT, NETWORK_PENDING_BEEMINDER_INT);
+        sUriMatcher.addURI(Contract.CONTENT_AUTHORITY, Contract.PATH_ALARMS, ALARMS);
     }
 
     private DbHelper mDbHelper;
@@ -82,6 +85,8 @@ public class ContentProvider extends android.content.ContentProvider {
                 break;
             case NETWORK_PENDING_BEEMINDER_INT:
                 break;
+            case ALARMS:
+                cursor = db.query(Contract.TABLE_ALARMS, projection, selection, selectionArgs, null, null, sortOrder);
             default:
                 Log.e(LOG_TAG, "Did not match any URIs for: " + uri.toString());
         }
@@ -164,30 +169,24 @@ public class ContentProvider extends android.content.ContentProvider {
                 cur.moveToFirst();
 
                 int base_id = (int) cur.getLong(cur.getColumnIndex(Contract.KEY_ID));
-                int hour_id = base_id * 100 + 60; // 60 min in an hour
-                int day_id = base_id * 100 + 24; // 24 hours in a day
-                int pay_id = base_id * 100 + 55; // 55 = $$
+
 
                 // Clear current notifications
                 NotificationManager mNotifyMgr = (NotificationManager) context.getSystemService(context.NOTIFICATION_SERVICE);
-                mNotifyMgr.cancel(day_id);
-                mNotifyMgr.cancel(hour_id);
+                mNotifyMgr.cancel(Utility.taskIdToNotification(base_id));
 
 
                 // Remove notification alarms
                 AlarmManager alarmManager = (AlarmManager) getContext().getSystemService(context.ALARM_SERVICE);
                 Intent intentHour = new Intent(context, ReminderService.class);
-                PendingIntent pendingIntentHour = PendingIntent.getService(context, hour_id, intentHour, PendingIntent.FLAG_UPDATE_CURRENT);
+                PendingIntent pendingIntentHour = PendingIntent.getService(context, Utility.taskIdToNotificationAlarm(base_id), intentHour, PendingIntent.FLAG_UPDATE_CURRENT);
                 alarmManager.cancel(pendingIntentHour);
 
-                Intent intentDay = new Intent(context, ReminderService.class);
-                PendingIntent pendingIntentDay = PendingIntent.getService(context, day_id, intentDay, PendingIntent.FLAG_UPDATE_CURRENT);
-                alarmManager.cancel(pendingIntentDay);
 
                 // Remove overdue check
                 Intent intentPayment = new Intent(context, OverdueService.class);
                 intentPayment.putExtra(OverdueService.TASK_ID, base_id);
-                PendingIntent pendingIntentPayment = PendingIntent.getService(context, pay_id, intentPayment, PendingIntent.FLAG_UPDATE_CURRENT);
+                PendingIntent pendingIntentPayment = PendingIntent.getService(context, Utility.taskIdToPaymentAlarm(base_id), intentPayment, PendingIntent.FLAG_UPDATE_CURRENT);
                 alarmManager.cancel(pendingIntentPayment);
 
                 rowsDeleted = db.delete(Contract.TABLE_ACTIVE_TASKS, selection, selectionArgs);
@@ -201,6 +200,8 @@ public class ContentProvider extends android.content.ContentProvider {
                 break;
             case NETWORK_PENDING_BEEMINDER_INT:
                 break;
+            case ALARMS:
+                rowsDeleted = db.delete(Contract.TABLE_ALARMS, selection, selectionArgs);
             default:
                 Log.e(LOG_TAG, "Did not match any URIs for: " + uri.toString());
         }

@@ -8,28 +8,17 @@ import android.util.Log;
 import com.beeminder.gtbee.Utility;
 import com.beeminder.gtbee.data.Contract;
 
-/**
- * An {@link IntentService} subclass for handling asynchronous task requests in
 
- */
 public class DeleteTaskService extends IntentService {
-    public static final String TASK_TITLE = "com.beeminder.gtbee.deletetakservice.task_title";
+    public static final String TASK_ID = "com.beeminder.gtbee.deletetakservice.task_id";
 
-    /**
-     * Creates an IntentService.  Invoked by your subclass's constructor
-     */
+
     public DeleteTaskService() {super("DeleteTaskService");}
 
     @Override
     protected void onHandleIntent(Intent intent) {
-        String title = intent.getStringExtra(TASK_TITLE);
-        Log.v("Delete Task service", "Deleting: " + title);
-
-        Cursor cur = getContentResolver().query(Contract.ACTIVE_TASKS_URI, null,
-                Contract.KEY_TITLE + "=\"" + title + "\"", null, null);
-        cur.moveToFirst();
-        int base_id = cur.getInt(0);
-        getContentResolver().delete(Contract.ACTIVE_TASKS_URI, Contract.KEY_ID + "=" + base_id, null);
-
+        Long taskID = intent.getLongExtra(TASK_ID, -1l);
+        Log.v("Delete Task service", "Deleting: " + Long.toString(taskID));
+        getContentResolver().delete(Contract.ACTIVE_TASKS_URI, Contract.KEY_ID + "=" + taskID, null);
     }
 }

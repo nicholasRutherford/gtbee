@@ -24,7 +24,7 @@ public class Utility {
     private static final long day_mili = 24*hour_mili;
     private static final int buffer_time = 1000*30;
 
-    public String formatPenalty(int penalty){
+    public static String formatPenalty(int penalty){
         return "$" + Integer.toString(penalty);
     }
 
@@ -33,7 +33,7 @@ public class Utility {
         Tuseday (Day of week For items <7 days away)
         May 5 (Month Day for items >6 days away)
      */
-    public String niceDate(Long time_mili) {
+    public static String niceDate(Long time_mili) {
         Long current = Calendar.getInstance().getTimeInMillis();
 
         Date date = new Date(time_mili);
@@ -57,14 +57,14 @@ public class Utility {
     }
 
     // IE Thursday
-    private String niceDateWeek(Long time_mili){
+    private static String niceDateWeek(Long time_mili){
         Date date = new Date(time_mili);
         Calendar cal = Calendar.getInstance();
         cal.setTime(date);
         return cal.getDisplayName(Calendar.DAY_OF_WEEK,Calendar.LONG,Locale.getDefault());
     }
 
-    private String niceDateToday(Long time_mili){
+    private static String niceDateToday(Long time_mili){
         Calendar cur = Calendar.getInstance();
 
         Date date = new Date(time_mili);
@@ -78,7 +78,7 @@ public class Utility {
         }
     }
 
-    private String niceDateFull(Long time_mili){
+    private static String niceDateFull(Long time_mili){
         Date date = new Date(time_mili);
         Calendar cal = Calendar.getInstance();
         cal.setTime(date);
@@ -90,7 +90,7 @@ public class Utility {
 
     }
 
-    public String niceTime(Long time_mili){
+    public static String niceTime(Long time_mili){
         Date date = new Date(time_mili);
         Calendar cal = Calendar.getInstance();
         cal.setTime(date);
@@ -107,14 +107,14 @@ public class Utility {
         return hour + ":" + min + " " + ampm;
     }
 
-    public String niceDateTime(Long time_mili){
+    public static String niceDateTime(Long time_mili){
         String date = niceDate(time_mili);
         String time = niceTime(time_mili);
 
         return  date + ", " + time;
     }
 
-    public String mainScreenTop(Long time_mili){
+    public static String mainScreenTop(Long time_mili){
         Long current = Calendar.getInstance().getTimeInMillis();
         Calendar cur = Calendar.getInstance();
 
@@ -142,7 +142,7 @@ public class Utility {
 
     }
 
-    public String mainScreenBottom(Long time_mili){
+    public static String mainScreenBottom(Long time_mili){
         Long current = Calendar.getInstance().getTimeInMillis();
         Calendar cur = Calendar.getInstance();
 
@@ -163,7 +163,7 @@ public class Utility {
         }
     }
 
-    public int retryToAmount(int retryNumber) {
+    public static int retryToAmount(int retryNumber) {
         if (retryNumber < 1) {
             return 5;
         } else if (retryNumber == 1) {
@@ -181,7 +181,7 @@ public class Utility {
         }
     }
 
-    public String dialogTime(Long dueDate){
+    public static String dialogTime(Long dueDate){
         Long currentDate = Calendar.getInstance().getTimeInMillis() - buffer_time;
         Long diff = dueDate - currentDate;
         if (diff < sec_mili){
@@ -196,5 +196,25 @@ public class Utility {
             return Integer.toString((int) Math.floor(diff / day_mili)) + " days.";
         }
 
+    }
+
+    public static int taskIdToNotificationAlarm(int TaskID){
+        return  TaskID * 100 + 2;
+    }
+
+    public static int taskIdToNotification(long TaskID){
+        return (int)TaskID * 100 + 3;
+    }
+
+    public static int taskIdToPendingDetailedTask(long TaskId){
+        return (int)TaskId * 100 + 4;
+    }
+
+    public static int taskIdToPendingDone(long TaskId){
+        return (int)TaskId * 100 + 5;
+    }
+
+    public static int taskIdToPaymentAlarm(long TaskID){
+        return (int)TaskID* 100 + 6;
     }
 }

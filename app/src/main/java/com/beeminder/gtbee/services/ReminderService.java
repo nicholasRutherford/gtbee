@@ -15,6 +15,8 @@ import android.util.Log;
 import com.beeminder.gtbee.R;
 import com.beeminder.gtbee.TaskDetail;
 import com.beeminder.gtbee.TaskFragment;
+import com.beeminder.gtbee.Utility;
+import com.beeminder.gtbee.data.Contract;
 
 /**
  * Created by nick on 18/06/15.
@@ -22,10 +24,8 @@ import com.beeminder.gtbee.TaskFragment;
 public class ReminderService extends IntentService {
     private static final String mName = "ReminderService";
 
-    public static final String TASK_TITLE = "com.beeminder.gtbee.task_title";
     public static final String REMINDER_TITLE = "com.beeminder.gtbee.reminder_title";
     public static final String REMINDER_TEXT = "com.beeminder.gtbee.reminder_text";
-    public static final String REMINDER_ID = "com.beeminder.gtbee.reminder_id";
     public static final String BASE_ID = "com.beeminder.gtbee.reminder_base_id";
 
 
@@ -38,50 +38,46 @@ public class ReminderService extends IntentService {
         long[] vibPattern = {0,100,100,100,100,500};
         Uri sound = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
 
-
-        String task_title = intent.getStringExtra(TASK_TITLE);
         String title = intent.getStringExtra(REMINDER_TITLE);
         String text = intent.getStringExtra(REMINDER_TEXT);
-        int notification_id = intent.getIntExtra(REMINDER_ID, 0);
         long baseID = intent.getIntExtra(BASE_ID, -1);
+        int notification_id = Utility.taskIdToNotification(baseID);
+
         Log.v("ReminderService", title);
         Log.v("ReminderService", "ID: " + Integer.toString(notification_id));
 
-        SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(this);
-        Boolean notify = sharedPref.getBoolean("notifications_checkbox", true);
+        NotificationCompat.Builder mBuilder = new NotificationCompat.Builder(this)
+                .setSmallIcon(R.drawable.ic_notification_logo)
+                .setContentTitle(title)
+                .setContentText(text)
+                .setAutoCancel(true)
+                .setLights(Color.YELLOW, 500, 500)
+                .setVibrate(vibPattern)
+                .setSound(sound)
+                .setTicker(title);
 
-        if (notify) {
+        // Click notification action
+        Intent resultIntent = new Intent(this, TaskDetail.class);
+        resultIntent.putExtra(TaskDetail.KEY_ID, baseID);
 
-            NotificationCompat.Builder mBuilder = new NotificationCompat.Builder(this)
-                    .setSmallIcon(R.drawable.ic_notification_logo)
-                    .setContentTitle(title)
-                    .setContentText(text)
-                    .setAutoCancel(true)
-                    .setLights(Color.YELLOW, 500, 500)
-                    .setVibrate(vibPattern)
-                    .setSound(sound)
-                    .setTicker(title);
+        PendingIntent resultPendingIntent = PendingIntent.getActivity(
+                this, Utility.taskIdToPendingDetailedTask(baseID),
+                resultIntent, PendingIntent.FLAG_UPDATE_CURRENT);
 
-            // Click notification action
-            Intent resultIntent = new Intent(this, TaskDetail.class);
-            resultIntent.putExtra(TaskDetail.KEY_ID, baseID);
+        mBuilder.setContentIntent(resultPendingIntent);
 
-            PendingIntent resultPendingIntent = PendingIntent.getActivity(
-                    this, 0, resultIntent, PendingIntent.FLAG_UPDATE_CURRENT);
+        //Add done button
+        Intent doneIntent = new Intent(this, DeleteTaskService.class);
+        doneIntent.putExtra(DeleteTaskService.TASK_ID, baseID);
+        PendingIntent pDoneIntent = PendingIntent.getService(this, Utility.taskIdToPendingDone(baseID),
+                doneIntent, PendingIntent.FLAG_CANCEL_CURRENT);
 
-            mBuilder.setContentIntent(resultPendingIntent);
+        mBuilder.addAction(R.drawable.ic_done_black_24dp, "Done!", pDoneIntent);
 
-            //Add done button
-            Intent doneIntent = new Intent(this, DeleteTaskService.class);
-            doneIntent.putExtra(DeleteTaskService.TASK_TITLE, task_title);
-            PendingIntent pDoneIntent = PendingIntent.getService(this, notification_id * 10 + 2,
-                    doneIntent, PendingIntent.FLAG_CANCEL_CURRENT);
+        NotificationManager mNotifyMgr = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
+        mNotifyMgr.notify(notification_id, mBuilder.build());
 
-            mBuilder.addAction(R.drawable.ic_done_black_24dp, "Done!", pDoneIntent);
-
-
-            NotificationManager mNotifyMgr = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
-            mNotifyMgr.notify(notification_id, mBuilder.build());
-        }
+        getContentResolver().delete(Contract.ALARMS_URI, Contract.KEY_TASK_ID + "=" + baseID, null);
     }
+
 }

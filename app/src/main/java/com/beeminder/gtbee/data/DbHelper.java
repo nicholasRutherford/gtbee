@@ -38,7 +38,7 @@ public class DbHelper extends SQLiteOpenHelper {
             Contract.KEY_DONE_DATE + " INTEGER NOT NULL"+
             ");";
 
-    // NETWORK_PENDING_PAYMENT  create statement
+    // NETWORK_FAILED_TASKS create statement
     private static final String CREATE_FAILED_TASKS =  "CREATE TABLE " + Contract.TABLE_FAILED_TASKS +
             " (" +
             Contract.KEY_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
@@ -57,6 +57,17 @@ public class DbHelper extends SQLiteOpenHelper {
             Contract.KEY_SENT_STATUS + " INTEGER NOT NULL" +
             ");";
 
+    // ALARMS create satement
+    private static final String CREATE_ALARMS = "CREATE TABLE " + Contract.TABLE_ALARMS +
+            " (" +
+            Contract.KEY_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
+            Contract.KEY_TITLE + " TEXT NOT NULL, " +
+            Contract.KEY_DESCRIPTION + " TEXT NOT NULL, " +
+            Contract.KEY_TASK_ID + " INTEGER NOT NULL, " +
+            Contract.KEY_ALARM_TYPE + " TEXT NOT NULL, " +
+            Contract.KEY_ALARM_TIME + " INTEGER NOT NULL " +
+            ");";
+
 
 
 
@@ -72,6 +83,7 @@ public class DbHelper extends SQLiteOpenHelper {
         db.execSQL(CREATE_COMPLETED_TASKS);
         db.execSQL(CREATE_FAILED_TASKS);
         db.execSQL(CREATE_NETWORK_PENDING_BEEMINDER_INT);
+        db.execSQL(CREATE_ALARMS);
     }
 
     @Override
@@ -81,6 +93,7 @@ public class DbHelper extends SQLiteOpenHelper {
         db.execSQL("DROP TABLE IF EXISTS " + Contract.TABLE_COMPLETED_TASKS);
         db.execSQL("DROP TABLE IF EXISTS " + Contract.TABLE_FAILED_TASKS);
         db.execSQL("DROP TABLE IF EXISTS " + Contract.TABLE_NETWORK_PENDING_BEEMINDER_INT);
+        db.execSQL("DROP TABLE IF EXISTS " + Contract.TABLE_ALARMS);
 
         // create new tables
         onCreate(db);

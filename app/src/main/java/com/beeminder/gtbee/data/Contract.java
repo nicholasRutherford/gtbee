@@ -4,11 +4,13 @@ import android.content.ContentResolver;
 import android.content.ContentUris;
 import android.net.Uri;
 
+import java.net.URI;
+
 /**
  * Created by nick on 17/07/15.
  */
 public class Contract {
-    public static final int DATABASE_VERSION = 8;
+    public static final int DATABASE_VERSION = 9;
     public static final String DATABASE_NAME = "GTBeeDB";
 
     public static final String CONTENT_AUTHORITY = "com.beeminder.gtbee.provider";
@@ -39,7 +41,6 @@ public class Contract {
     // ACTIVE_TASKS column names
     public static final String KEY_RETRY_NUMBER = "retry_number";
 
-
     // Completed column names
     public static final String KEY_DONE_DATE = "done_date";
 
@@ -53,6 +54,11 @@ public class Contract {
     // ALARMS column names
     public static final String KEY_ALARM_TYPE = "type";
     public static final String KEY_ALARM_TIME = "time";
+
+    // ALARM types
+    public static final String KEY_ALARM_TYPE_NOTIFICATION_ONE_TIME = "notification_one_time";
+    public static final String KEY_ALARM_TYPE_NOTIFICATION_ZENO = "notification_zeno";
+    public static final String KEY_ALARM_TYPE_PAYMENT = "payment";
 
 
     // Content Types
@@ -72,6 +78,9 @@ public class Contract {
 
     public static final Uri NETWORK_PENDING_BEEMINDER_INT_URI = BASE_CONTENT_URI.buildUpon().
             appendPath(PATH_NETWORK_PENDING_BEEMINDER_INT).build();
+
+    public static final Uri ALARMS_URI = BASE_CONTENT_URI.buildUpon().
+            appendPath(PATH_ALARMS).build();
 
 
 

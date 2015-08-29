@@ -257,66 +257,45 @@ public class NewTask extends ActionBarActivity implements TimePickerDialog.OnTim
 
     private void setNotifications(int id, int penalty){
         int base_id;
-        int hour_id;
-        int day_id;
-        int pay_id;
 
         int hourMili = 60*60*1000;
-        int dayMili = 24*hourMili;
+
 
         Cursor cur = getContentResolver().query(Contract.ACTIVE_TASKS_URI, // Table
-                new String[] {Contract.KEY_ID}, // Column
-                Contract.KEY_ID + "=" + id , // Where row title is given title
+                new String[]{Contract.KEY_ID}, // Column
+                Contract.KEY_ID + "=" + id, // Where row title is given title
                 null,
                 null);
         cur.moveToFirst();
         String title = cur.getString(cur.getColumnIndex(Contract.KEY_TITLE));
         base_id = cur.getInt(0);
-        hour_id = base_id * 100 + 60; // 60 min in an hour
-        day_id = base_id * 100 + 24; // 24 hours in a day
-        pay_id = base_id * 100 + 55; // 55 = $$
+
 
         AlarmManager alarmManager = (AlarmManager) getSystemService(ALARM_SERVICE);
 
 
         // One hour notification
-        Intent intentHour = new Intent(this, ReminderService.class);
-        intentHour.putExtra(ReminderService.REMINDER_TITLE, title + "!");
-        intentHour.putExtra(ReminderService.REMINDER_TEXT, "Due in less than one hour! Eek!");
-        intentHour.putExtra(ReminderService.REMINDER_ID, hour_id);
-        intentHour.putExtra(ReminderService.BASE_ID, base_id);
-        intentHour.putExtra(ReminderService.TASK_TITLE, title);
-
-        PendingIntent pendingIntentHour = PendingIntent.getService(this, hour_id, intentHour, PendingIntent.FLAG_UPDATE_CURRENT);
+        ContentValues values = new ContentValues();
+        values.put(Contract.KEY_TITLE, title + "!");
+        values.put(Contract.KEY_DESCRIPTION, "Due in less than one hour! Eek!");
+        values.put(Contract.KEY_TASK_ID, base_id);
+        values.put(Contract.KEY_ALARM_TYPE, Contract.KEY_ALARM_TYPE_NOTIFICATION_ONE_TIME);
+        values.put(Contract.KEY_ALARM_TIME, mdate - hourMili);
+        getContentResolver().insert(Contract.ALARMS_URI, values);
 
         Log.v("newTask", "Due Date: " + new Utility().niceDateTime(mdate));
 
-        alarmManager.set(AlarmManager.RTC_WAKEUP, mdate - hourMili, pendingIntentHour);
-        Log.v("newTask", "Alarm set for: " + new Utility().niceDateTime(mdate - hourMili));
-
-
-        // One day notification
-        Intent intentDay = new Intent(this, ReminderService.class);
-        intentDay.putExtra(ReminderService.REMINDER_TITLE, title + "!");
-        intentDay.putExtra(ReminderService.REMINDER_TEXT, "Due in less than one day.");
-        intentDay.putExtra(ReminderService.REMINDER_ID, day_id);
-        intentDay.putExtra(ReminderService.BASE_ID, base_id);
-        intentDay.putExtra(ReminderService.TASK_TITLE, title);
-
-        PendingIntent pendingIntentDay = PendingIntent.getService(this, day_id, intentDay, PendingIntent.FLAG_UPDATE_CURRENT);
-
-
-        alarmManager.set(AlarmManager.RTC_WAKEUP, mdate - dayMili, pendingIntentDay);
-        Log.v("newTask", "Alarm set for: " + new Utility().niceDateTime(mdate - dayMili));
-
         // Set payment alarm
         if (penalty > 0 ) {
-            Intent intentPayment = new Intent(this, OverdueService.class);
-            intentPayment.putExtra(OverdueService.TASK_ID, base_id);
-            PendingIntent pendingIntentPayment = PendingIntent.getService(this, pay_id, intentPayment, PendingIntent.FLAG_UPDATE_CURRENT);
+            values = new ContentValues();
+            values.put(Contract.KEY_TITLE, title);
+            values.put(Contract.KEY_DESCRIPTION, "");
+            values.put(Contract.KEY_TASK_ID, base_id);
+            values.put(Contract.KEY_ALARM_TYPE, Contract.KEY_ALARM_TYPE_PAYMENT);
+            values.put(Contract.KEY_ALARM_TIME, mdate);
 
-            alarmManager.set(AlarmManager.RTC_WAKEUP, mdate, pendingIntentPayment);
-            Log.v("newTask", "Payment set for: " + new Utility().niceDateTime(mdate));
+            getContentResolver().insert(Contract.ALARMS_URI, values);
+
         }
 
         SharedPreferences settings = getSharedPreferences(OauthActivity.PREF_NAME, MODE_PRIVATE);
@@ -325,7 +304,7 @@ public class NewTask extends ActionBarActivity implements TimePickerDialog.OnTim
         if (!(beeminderGoal == null)){
             int sentStatus = 0; // Not sent
 
-            ContentValues values = new ContentValues();
+            values = new ContentValues();
             values.put(Contract.KEY_TITLE, title);
             values.put(Contract.KEY_TASK_ID, base_id);
             values.put(Contract.KEY_SENT_STATUS, 0);

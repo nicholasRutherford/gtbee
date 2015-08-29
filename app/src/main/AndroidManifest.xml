@@ -120,8 +120,13 @@
         <activity
             android:name=".FailedTaskActivity"
             android:label="@string/title_activity_failed_task"
-            android:parentActivityName=".MainActivity">
+            android:parentActivityName=".MainActivity" >
         </activity>
+
+        <service
+            android:name=".services.CreateAlarmsService"
+            android:exported="false" >
+        </service>
     </application>
 
 </manifest>
