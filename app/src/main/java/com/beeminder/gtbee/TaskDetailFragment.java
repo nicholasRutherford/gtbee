@@ -39,9 +39,9 @@ public class TaskDetailFragment extends Fragment {
                 null, Contract.KEY_ID + "=" + taskID, null, null);
 
         cur.moveToFirst();
-        Long dateAdded = cur.getLong(cur.getColumnIndex(Contract.KEY_ADDED_DATE));
-        Long dateDue = cur.getLong(cur.getColumnIndex(Contract.KEY_DUE_DATE));
-        int penalty = cur.getInt(cur.getColumnIndex(Contract.KEY_PENALTY));
+        Long dateAdded = cur.getLong(cur.getColumnIndexOrThrow(Contract.KEY_ADDED_DATE));
+        Long dateDue = cur.getLong(cur.getColumnIndexOrThrow(Contract.KEY_DUE_DATE));
+        int penalty = cur.getInt(cur.getColumnIndexOrThrow(Contract.KEY_PENALTY));
 
         TextView dateAddedView = (TextView) view.findViewById(R.id.detail_task_date_added);
         dateAddedView.setText(new Utility().niceDateTime(dateAdded));

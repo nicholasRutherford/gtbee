@@ -27,9 +27,9 @@ public class OverdueService extends IntentService {
         if (cur.getCount() == 1) {
             cur.moveToFirst();
 
-            String title = cur.getString(cur.getColumnIndex(Contract.KEY_TITLE));
-            int paymentAmount = cur.getInt(cur.getColumnIndex(Contract.KEY_PENALTY));
-            Long dueDate = cur.getLong(cur.getColumnIndex(Contract.KEY_DUE_DATE));
+            String title = cur.getString(cur.getColumnIndexOrThrow(Contract.KEY_TITLE));
+            int paymentAmount = cur.getInt(cur.getColumnIndexOrThrow(Contract.KEY_PENALTY));
+            Long dueDate = cur.getLong(cur.getColumnIndexOrThrow(Contract.KEY_DUE_DATE));
             int payed = 0; // Set payment status to not payed
 
             ContentValues values = new ContentValues();

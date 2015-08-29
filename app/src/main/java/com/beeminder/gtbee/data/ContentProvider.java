@@ -168,7 +168,7 @@ public class ContentProvider extends android.content.ContentProvider {
                 Context context = getContext();
                 cur.moveToFirst();
 
-                int base_id = (int) cur.getLong(cur.getColumnIndex(Contract.KEY_ID));
+                int base_id = (int) cur.getLong(cur.getColumnIndexOrThrow(Contract.KEY_ID));
 
 
                 // Clear current notifications

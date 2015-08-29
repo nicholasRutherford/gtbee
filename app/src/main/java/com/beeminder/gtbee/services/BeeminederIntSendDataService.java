@@ -62,8 +62,8 @@ public class BeeminederIntSendDataService extends IntentService {
 
         //loop time!
         while (cursor.moveToNext()){
-            String title = cursor.getString(cursor.getColumnIndex(Contract.KEY_TITLE));
-            long id = cursor.getLong(cursor.getColumnIndex(Contract.KEY_ID));
+            String title = cursor.getString(cursor.getColumnIndexOrThrow(Contract.KEY_TITLE));
+            long id = cursor.getLong(cursor.getColumnIndexOrThrow(Contract.KEY_ID));
 
             StringRequest request = createStringRequest(accessToken,beeminderGoal, title, id);
             queue.add(request);

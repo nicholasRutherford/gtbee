@@ -50,9 +50,9 @@ public class PaymentService extends IntentService {
 
         //loop time!
         while (cursor.moveToNext()){
-            String title = cursor.getString(cursor.getColumnIndex(Contract.KEY_TITLE));
-            int payment = cursor.getInt(cursor.getColumnIndex(Contract.KEY_PENALTY));
-            long id = cursor.getLong(cursor.getColumnIndex(Contract.KEY_ID));
+            String title = cursor.getString(cursor.getColumnIndexOrThrow(Contract.KEY_TITLE));
+            int payment = cursor.getInt(cursor.getColumnIndexOrThrow(Contract.KEY_PENALTY));
+            long id = cursor.getLong(cursor.getColumnIndexOrThrow(Contract.KEY_ID));
             StringRequest request = createStringRequest(accessToken,payment, title, id);
             queue.add(request);
         }

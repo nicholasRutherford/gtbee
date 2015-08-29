@@ -247,28 +247,29 @@ public class NewTask extends ActionBarActivity implements TimePickerDialog.OnTim
         Uri insertedUri = getContentResolver().insert(Contract.ACTIVE_TASKS_URI, values);
         Cursor cur = getContentResolver().query(insertedUri, null, null, null, null);
         cur.moveToFirst();
-        int id = cur.getInt(cur.getColumnIndex(Contract.KEY_ID));
+        int id = cur.getInt(cur.getColumnIndexOrThrow(Contract.KEY_ID));
 
 
-        setNotifications(id, mPenalty);
+        setAlarms(id);
         this.finish();
 
     }
 
-    private void setNotifications(int id, int penalty){
-        int base_id;
+    private void setAlarms(int id){
+
 
         int hourMili = 60*60*1000;
 
 
         Cursor cur = getContentResolver().query(Contract.ACTIVE_TASKS_URI, // Table
-                new String[]{Contract.KEY_ID}, // Column
+                null, // Column
                 Contract.KEY_ID + "=" + id, // Where row title is given title
                 null,
                 null);
         cur.moveToFirst();
-        String title = cur.getString(cur.getColumnIndex(Contract.KEY_TITLE));
-        base_id = cur.getInt(0);
+        Log.v(LOG_TAG, Integer.toString(cur.getCount()));
+        String title = cur.getString(cur.getColumnIndexOrThrow(Contract.KEY_TITLE));
+        int penalty = cur.getInt(cur.getColumnIndexOrThrow(Contract.KEY_PENALTY));
 
 
         AlarmManager alarmManager = (AlarmManager) getSystemService(ALARM_SERVICE);
@@ -278,7 +279,7 @@ public class NewTask extends ActionBarActivity implements TimePickerDialog.OnTim
         ContentValues values = new ContentValues();
         values.put(Contract.KEY_TITLE, title + "!");
         values.put(Contract.KEY_DESCRIPTION, "Due in less than one hour! Eek!");
-        values.put(Contract.KEY_TASK_ID, base_id);
+        values.put(Contract.KEY_TASK_ID, id);
         values.put(Contract.KEY_ALARM_TYPE, Contract.KEY_ALARM_TYPE_NOTIFICATION_ONE_TIME);
         values.put(Contract.KEY_ALARM_TIME, mdate - hourMili);
         getContentResolver().insert(Contract.ALARMS_URI, values);
@@ -290,7 +291,7 @@ public class NewTask extends ActionBarActivity implements TimePickerDialog.OnTim
             values = new ContentValues();
             values.put(Contract.KEY_TITLE, title);
             values.put(Contract.KEY_DESCRIPTION, "");
-            values.put(Contract.KEY_TASK_ID, base_id);
+            values.put(Contract.KEY_TASK_ID, id);
             values.put(Contract.KEY_ALARM_TYPE, Contract.KEY_ALARM_TYPE_PAYMENT);
             values.put(Contract.KEY_ALARM_TIME, mdate);
 
@@ -306,7 +307,7 @@ public class NewTask extends ActionBarActivity implements TimePickerDialog.OnTim
 
             values = new ContentValues();
             values.put(Contract.KEY_TITLE, title);
-            values.put(Contract.KEY_TASK_ID, base_id);
+            values.put(Contract.KEY_TASK_ID, id);
             values.put(Contract.KEY_SENT_STATUS, 0);
 
             getContentResolver().insert(Contract.NETWORK_PENDING_BEEMINDER_INT_URI, values);

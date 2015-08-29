@@ -10,7 +10,7 @@ import java.net.URI;
  * Created by nick on 17/07/15.
  */
 public class Contract {
-    public static final int DATABASE_VERSION = 9;
+    public static final int DATABASE_VERSION = 10;
     public static final String DATABASE_NAME = "GTBeeDB";
 
     public static final String CONTENT_AUTHORITY = "com.beeminder.gtbee.provider";

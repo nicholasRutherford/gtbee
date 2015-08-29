@@ -54,10 +54,10 @@ public class TaskAdapter extends CursorAdapter {
     public void bindView(View view, Context context, Cursor cursor) {
         ViewHolder viewHolder = (ViewHolder) view.getTag();
 
-        String title = cursor.getString(cursor.getColumnIndex(Contract.KEY_TITLE));
+        String title = cursor.getString(cursor.getColumnIndexOrThrow(Contract.KEY_TITLE));
         viewHolder.titleView.setText(title);
 
-        Long dueDate = cursor.getLong(cursor.getColumnIndex(Contract.KEY_DUE_DATE));
+        Long dueDate = cursor.getLong(cursor.getColumnIndexOrThrow(Contract.KEY_DUE_DATE));
         viewHolder.dateTopView.setText(new Utility().mainScreenTop(dueDate));
         viewHolder.dateBottomView.setText(new Utility().mainScreenBottom(dueDate));
 
@@ -68,7 +68,7 @@ public class TaskAdapter extends CursorAdapter {
             view.setBackgroundColor(Color.WHITE);
         }
 
-        int penalty = cursor.getInt(cursor.getColumnIndex(Contract.KEY_PENALTY));
+        int penalty = cursor.getInt(cursor.getColumnIndexOrThrow(Contract.KEY_PENALTY));
         viewHolder.penaltyView.setText(new Utility().formatPenalty(penalty));
 
 

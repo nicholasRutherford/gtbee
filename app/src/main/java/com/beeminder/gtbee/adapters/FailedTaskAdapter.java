@@ -51,13 +51,13 @@ public class FailedTaskAdapter extends CursorAdapter {
     public void bindView(View view, Context context, Cursor cursor) {
         ViewHolder viewHolder = (ViewHolder) view.getTag();
 
-        String title = cursor.getString(cursor.getColumnIndex(Contract.KEY_TITLE));
+        String title = cursor.getString(cursor.getColumnIndexOrThrow(Contract.KEY_TITLE));
         viewHolder.mTitle.setText(title);
 
-        int paymentAmount = cursor.getInt(cursor.getColumnIndex(Contract.KEY_PENALTY));
+        int paymentAmount = cursor.getInt(cursor.getColumnIndexOrThrow(Contract.KEY_PENALTY));
         viewHolder.mPaymentAmount.setText("$" + paymentAmount);
 
-        int payed = cursor.getInt(cursor.getColumnIndex(Contract.KEY_PAYED));
+        int payed = cursor.getInt(cursor.getColumnIndexOrThrow(Contract.KEY_PAYED));
         String paymentStatus;
         if (payed == 0){
             paymentStatus = "Payment Pending";

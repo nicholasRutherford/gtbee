@@ -40,7 +40,7 @@ public class TaskDetail extends ActionBarActivity {
         } else {
             cur.moveToFirst();
 
-            Long dateDue = cur.getLong(cur.getColumnIndex(Contract.KEY_DUE_DATE));
+            Long dateDue = cur.getLong(cur.getColumnIndexOrThrow(Contract.KEY_DUE_DATE));
             Long currentDate = Calendar.getInstance().getTimeInMillis();
 
             if ((dateDue - currentDate) < 0){
@@ -49,7 +49,7 @@ public class TaskDetail extends ActionBarActivity {
                 setContentView(R.layout.activity_task_detail);
             }
 
-            String title = cur.getString(cur.getColumnIndex(Contract.KEY_TITLE));
+            String title = cur.getString(cur.getColumnIndexOrThrow(Contract.KEY_TITLE));
             getSupportActionBar().setTitle(title);
         }
 
@@ -86,7 +86,7 @@ public class TaskDetail extends ActionBarActivity {
         Cursor cur = getContentResolver().query(Contract.ACTIVE_TASKS_URI, null,
                 Contract.KEY_ID + "=" + mTaskId, null, null);
         cur.moveToFirst();
-        int retryNumber = cur.getInt(cur.getColumnIndex(Contract.KEY_RETRY_NUMBER));
+        int retryNumber = cur.getInt(cur.getColumnIndexOrThrow(Contract.KEY_RETRY_NUMBER));
 
         Intent intent = new Intent(this, NewTask.class);
         intent.putExtra(NewTask.KEY_OLD_TASK_ID, mTaskId);

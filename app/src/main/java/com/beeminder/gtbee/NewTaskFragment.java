@@ -46,7 +46,7 @@ public class NewTaskFragment extends Fragment{
         if (oldID != -1l){
             Cursor cur = getActivity().getContentResolver().query(Contract.ACTIVE_TASKS_URI, null,
                     Contract.KEY_ID + "=" + oldID, null, null);
-            String title = cur.getString(cur.getColumnIndex(Contract.KEY_TITLE));
+            String title = cur.getString(cur.getColumnIndexOrThrow(Contract.KEY_TITLE));
             EditText editText = (EditText) view.findViewById(R.id.new_task_title);
             editText.setText(title);
 

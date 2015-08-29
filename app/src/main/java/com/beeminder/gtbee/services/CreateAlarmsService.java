@@ -27,11 +27,11 @@ public class CreateAlarmsService extends IntentService {
         AlarmManager alarmManager = (AlarmManager) getSystemService(ALARM_SERVICE);
 
         while (cur.moveToNext()){
-            String title = cur.getString(cur.getColumnIndex(Contract.KEY_TITLE));
-            String description = cur.getString(cur.getColumnIndex(Contract.KEY_DESCRIPTION));
-            String alarmType = cur.getString(cur.getColumnIndex(Contract.KEY_ALARM_TYPE));
-            Long time = cur.getLong(cur.getColumnIndex(Contract.KEY_ALARM_TIME));
-            int taskID = cur.getInt(cur.getColumnIndex(Contract.KEY_TASK_ID));
+            String title = cur.getString(cur.getColumnIndexOrThrow(Contract.KEY_TITLE));
+            String description = cur.getString(cur.getColumnIndexOrThrow(Contract.KEY_DESCRIPTION));
+            String alarmType = cur.getString(cur.getColumnIndexOrThrow(Contract.KEY_ALARM_TYPE));
+            Long time = cur.getLong(cur.getColumnIndexOrThrow(Contract.KEY_ALARM_TIME));
+            int taskID = cur.getInt(cur.getColumnIndexOrThrow(Contract.KEY_TASK_ID));
 
             Long currentTime = Calendar.getInstance().getTimeInMillis();
             if (currentTime > time){
