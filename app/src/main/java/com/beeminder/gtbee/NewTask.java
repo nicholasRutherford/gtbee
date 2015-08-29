@@ -30,6 +30,7 @@ import com.beeminder.gtbee.auth.OauthActivity;
 import com.beeminder.gtbee.data.Contract;
 import com.beeminder.gtbee.integrations.BeeminederIntActivity;
 import com.beeminder.gtbee.services.BeeminederIntSendDataService;
+import com.beeminder.gtbee.services.CreateAlarmsService;
 import com.beeminder.gtbee.services.OverdueService;
 import com.beeminder.gtbee.services.ReminderService;
 
@@ -298,6 +299,8 @@ public class NewTask extends ActionBarActivity implements TimePickerDialog.OnTim
             getContentResolver().insert(Contract.ALARMS_URI, values);
 
         }
+        Intent alarmService = new Intent(this, CreateAlarmsService.class);
+        startService(alarmService);
 
         SharedPreferences settings = getSharedPreferences(OauthActivity.PREF_NAME, MODE_PRIVATE);
         String beeminderGoal = settings.getString(BeeminederIntActivity.BEEMINDER_GOAL, null);
@@ -316,7 +319,6 @@ public class NewTask extends ActionBarActivity implements TimePickerDialog.OnTim
             startService(intentSendBeeminederInt);
             Log.v("NewTask", "Send datapoint to beeminder!");
         }
-
     }
 
 }

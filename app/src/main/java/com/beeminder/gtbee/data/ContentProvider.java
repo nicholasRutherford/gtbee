@@ -87,8 +87,9 @@ public class ContentProvider extends android.content.ContentProvider {
                 break;
             case ALARMS:
                 cursor = db.query(Contract.TABLE_ALARMS, projection, selection, selectionArgs, null, null, sortOrder);
+                break;
             default:
-                Log.e(LOG_TAG, "Did not match any URIs for: " + uri.toString());
+                Log.e(LOG_TAG, "Query: Did not match any URIs for: " + uri.toString());
         }
         cursor.setNotificationUri(getContext().getContentResolver(), uri);
         return cursor;
@@ -109,7 +110,7 @@ public class ContentProvider extends android.content.ContentProvider {
             case NETWORK_PENDING_BEEMINDER_INT:
                 break;
             default:
-                Log.e(LOG_TAG, "Did not match any URIs for: " + uri.toString());
+                Log.e(LOG_TAG, "GetType: Did not match any URIs for: " + uri.toString());
         }
         return null;
     }
@@ -146,9 +147,17 @@ public class ContentProvider extends android.content.ContentProvider {
 
             case NETWORK_PENDING_BEEMINDER_INT:
                 break;
+            case ALARMS:
+                id = db.insert(Contract.TABLE_ALARMS, null, values);
+                if (id > 0 ){
+                    returnUri = Contract.buildAlarmsUri(id);
+                } else {
+                    Log.e(LOG_TAG, "Failed to inert row into " + uri);
+                }
+                break;
 
             default:
-                Log.e(LOG_TAG, "Did not match any URIs for: " + uri.toString());
+                Log.e(LOG_TAG, "Insert: Did not match any URIs for: " + uri.toString());
                 break;
         }
 
@@ -203,7 +212,7 @@ public class ContentProvider extends android.content.ContentProvider {
             case ALARMS:
                 rowsDeleted = db.delete(Contract.TABLE_ALARMS, selection, selectionArgs);
             default:
-                Log.e(LOG_TAG, "Did not match any URIs for: " + uri.toString());
+                Log.e(LOG_TAG, "Delete: Did not match any URIs for: " + uri.toString());
         }
         if (rowsDeleted != 0){
             getContext().getContentResolver().notifyChange(uri, null);
@@ -233,7 +242,7 @@ public class ContentProvider extends android.content.ContentProvider {
                 rowsUpdated = db.update(Contract.TABLE_NETWORK_PENDING_BEEMINDER_INT, values, selection, selectionArgs);
                 break;
             default:
-                Log.e(LOG_TAG, "Did not match any URIs for: " + uri.toString());
+                Log.e(LOG_TAG, "Update: Did not match any URIs for: " + uri.toString());
         }
         if (rowsUpdated != 0){
             getContext().getContentResolver().notifyChange(uri, null);

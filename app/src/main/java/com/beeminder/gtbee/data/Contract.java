@@ -95,4 +95,8 @@ public class Contract {
     public static Uri buildCompletedTaskUri(long id){
         return ContentUris.withAppendedId(COMPLETED_TASKS_URI, id);
     }
+
+    public static Uri buildAlarmsUri(long id){
+        return ContentUris.withAppendedId(ALARMS_URI, id);
+    }
 }
